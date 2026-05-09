@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>I Am Redemption — Social Agent</title>
+<title>Social Command Center | I Am Redemption</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -22,11 +22,7 @@
     --gray2: #aaa;
     --green: #4caf7d;
     --red: #e05555;
-    --fb: #1877f2;
-    --ig: #e1306c;
-    --li: #0a66c2;
-    --yt: #ff0000;
-    --tw: #1da1f2;
+    --blue: #4a9eff;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -38,1326 +34,1273 @@
     overflow-x: hidden;
   }
 
-  /* ── LOGIN ── */
-  #login-screen {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(253,191,18,0.1) 0%, transparent 60%),
-      var(--black);
+  /* ── WELCOME BANNER ── */
+  .welcome-banner {
+    background: linear-gradient(135deg, #1e2e10 0%, #0a0a0a 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
   }
-  .login-box {
-    width: 400px; padding: 3.5rem 3rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--gold);
+  .welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(253,191,18,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .welcome-content { position: relative; z-index: 1; }
+  .welcome-greeting {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .welcome-tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .welcome-subtitle {
+    font-size: 14px;
+    color: var(--gray2);
+    margin-top: 0.5rem;
+    line-height: 1.6;
+  }
+
+  /* ── HELP TOOLTIP SYSTEM ── */
+  .help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: help;
+    margin-left: 6px;
     position: relative;
   }
-  .login-box::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(253,191,18,0.05) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
+  .help-icon:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+    background: var(--card);
+    border: 1px solid var(--gold);
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--white);
+    white-space: nowrap;
+    max-width: 280px;
+    white-space: normal;
+    width: max-content;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   }
-  .login-box > * { position: relative; z-index: 1; }
-  .login-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
-  .login-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; line-height: 0.95; margin-bottom: 0.5rem; }
-  .login-title span { color: var(--gold); }
-  .login-sub { font-size: 13px; color: var(--gray2); margin-bottom: 2rem; font-weight: 300; }
-  .login-input {
-    width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border2);
-    color: var(--white); padding: 0.9rem 1rem; font-family: 'Barlow', sans-serif;
-    font-size: 15px; outline: none; margin-bottom: 1rem; transition: border-color 0.2s;
-  }
-  .login-input:focus { border-color: rgba(253,191,18,0.4); }
-  .login-btn {
-    width: 100%; background: var(--gold); color: #000; border: none;
-    padding: 1rem; font-family: 'Bebas Neue', sans-serif; font-size: 20px;
-    letter-spacing: 0.1em; cursor: pointer; transition: background 0.2s;
-  }
-  .login-btn:hover { background: var(--gold2); }
-  .login-error { color: var(--red); font-size: 13px; margin-top: 0.75rem; }
 
-  /* ── APP SHELL ── */
-  #app { display: none; min-height: 100vh; }
-
-  /* ── TOP BAR ── */
-  .topbar {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(8,8,8,0.95); backdrop-filter: blur(12px);
+  /* ── STEP WIZARD ── */
+  .wizard {
+    background: var(--dark);
     border-bottom: 1px solid var(--border);
-    padding: 0.85rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 2.5rem;
   }
-  .topbar-brand { display: flex; align-items: center; gap: 1rem; }
-  .topbar-logo-img { height: 44px; width: auto; display: block; }
-  .topbar-logo-text { display: flex; flex-direction: column; justify-content: center; }
-  .topbar-logo-main { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; line-height: 1; }
-  .topbar-logo-main span { color: var(--gold); }
-  .topbar-logo-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-top: 2px; }
-  .topbar-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); border: 1px solid var(--border); padding: 2px 8px; }
-  .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
-  .api-status { display: flex; align-items: center; gap: 6px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; }
-  .status-dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .status-dot.off { background: var(--gray); }
-  .logout-btn { background: none; border: 1px solid var(--border); color: var(--gray); padding: 0.35rem 0.9rem; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
-  .logout-btn:hover { border-color: var(--gold); color: var(--gold); }
-
-  /* ── MAIN LAYOUT ── */
-  .main { display: grid; grid-template-columns: 1fr 420px; gap: 0; min-height: calc(100vh - 57px); }
-
-  /* ── LEFT: COMPOSE ── */
-  .compose-panel { padding: 2.5rem 2.5rem 2.5rem 2.5rem; border-right: 1px solid var(--border); overflow-y: auto; }
-  .section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-  .section-label::before { content: ''; width: 20px; height: 2px; background: var(--gold); }
-
-  /* Platform toggles */
-  .platform-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; margin-bottom: 2rem; }
-  .platform-toggle {
-    position: relative; cursor: pointer;
-    background: var(--card2); border: 1px solid var(--border2);
-    padding: 0.85rem 0.5rem; text-align: center;
-    transition: all 0.2s; user-select: none;
+  .wizard-steps {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    max-width: 900px;
   }
-  .platform-toggle:hover { border-color: rgba(255,255,255,0.15); }
-  .platform-toggle.active { border-color: var(--gold); background: var(--gold-dim); }
-  .platform-toggle.active .pt-check { opacity: 1; }
-  .pt-icon { font-size: 22px; display: block; margin-bottom: 4px; }
-  .pt-name { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray2); }
-  .platform-toggle.active .pt-name { color: var(--gold); }
-  .pt-check { position: absolute; top: 5px; right: 7px; font-size: 10px; color: var(--gold); opacity: 0; transition: opacity 0.2s; }
-
-  /* Context inputs */
-  .form-group { margin-bottom: 1.5rem; }
-  .form-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray2); display: block; margin-bottom: 0.5rem; }
-  .form-input, .form-textarea, .form-select {
-    width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border2);
-    color: var(--white); padding: 0.8rem 1rem; font-family: 'Barlow', sans-serif;
-    font-size: 14px; outline: none; transition: border-color 0.2s; resize: none;
+  .wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    position: relative;
   }
-  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: rgba(253,191,18,0.35); }
-  .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23777'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; cursor: pointer; }
-  .form-select option { background: #1a1a1a; }
-  .form-hint { font-size: 12px; color: var(--gray); margin-top: 0.4rem; font-style: italic; }
-
-  /* Tone chips */
-  .tone-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .tone-chip { background: var(--card2); border: 1px solid var(--border2); color: var(--gray2); padding: 0.35rem 0.85rem; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
-  .tone-chip:hover { border-color: rgba(255,255,255,0.2); color: var(--white); }
-  .tone-chip.active { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
-
-  /* Generate button */
-  .generate-btn {
-    width: 100%; background: var(--gold); color: #000; border: none;
-    padding: 1.1rem; font-family: 'Bebas Neue', sans-serif; font-size: 22px;
-    letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-    margin-top: 0.5rem;
+  .wizard-step::after {
+    content: '→';
+    position: absolute;
+    right: -1.5rem;
+    color: var(--gray);
+    font-size: 18px;
   }
-  .generate-btn:hover { background: var(--gold2); transform: translateY(-1px); }
-  .generate-btn:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; }
-  .generate-btn .btn-icon { font-size: 20px; }
-  .spinner { width: 20px; height: 20px; border: 2px solid rgba(0,0,0,0.3); border-top-color: #000; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── RIGHT: RESULTS PANEL ── */
-  .results-panel { background: var(--dark); overflow-y: auto; display: flex; flex-direction: column; }
-  .results-header { padding: 1.5rem 2rem 0; border-bottom: 1px solid var(--border); }
-  .results-tabs { display: flex; gap: 0; margin-top: 1rem; }
-  .rtab { flex: 1; padding: 0.65rem 0.5rem; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
-  .rtab:hover { color: var(--white); }
-  .rtab.active { color: var(--gold); border-bottom-color: var(--gold); }
-  .results-body { flex: 1; padding: 1.5rem; overflow-y: auto; }
-
-  /* Post cards */
-  .post-card {
-    background: var(--card); border: 1px solid var(--border2);
-    margin-bottom: 1.25rem; overflow: hidden;
-    transition: border-color 0.2s;
+  .wizard-step:last-child::after { display: none; }
+  .step-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--gray);
+    transition: all 0.3s;
   }
-  .post-card:hover { border-color: rgba(253,191,18,0.2); }
-  .post-card-header { padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border2); }
-  .platform-badge { width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-  .badge-fb { background: rgba(24,119,242,0.15); }
-  .badge-ig { background: rgba(225,48,108,0.15); }
-  .badge-li { background: rgba(10,102,194,0.15); }
-  .badge-yt { background: rgba(255,0,0,0.15); }
-  .badge-tw { background: rgba(29,161,242,0.15); }
-  .post-platform-name { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; }
-  .post-char-count { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: var(--gray); }
-  .post-body { padding: 1rem; }
-  .post-text {
-    width: 100%; background: transparent; border: none; color: var(--white);
-    font-family: 'Barlow', sans-serif; font-size: 13px; line-height: 1.75;
-    resize: none; outline: none; min-height: 120px;
+  .wizard-step.active .step-number {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000;
+    box-shadow: 0 0 12px var(--gold-glow);
   }
-  .post-footer { padding: 0.6rem 1rem; border-top: 1px solid var(--border2); display: flex; align-items: center; gap: 0.5rem; }
-  .post-action-btn { background: none; border: 1px solid var(--border2); color: var(--gray2); padding: 0.3rem 0.75rem; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
-  .post-action-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .post-publish-btn { margin-left: auto; background: var(--gold); color: #000; border: none; padding: 0.35rem 1rem; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 0.4rem; }
-  .post-publish-btn:hover { background: var(--gold2); }
-  .post-publish-btn.published { background: var(--green); color: #fff; }
-  .post-publish-btn.needs-setup { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
-
-  /* Empty state */
-  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 300px; text-align: center; padding: 3rem; }
-  .empty-icon { font-size: 48px; margin-bottom: 1rem; opacity: 0.3; }
-  .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.06em; color: var(--gray); margin-bottom: 0.5rem; }
-  .empty-sub { font-size: 13px; color: var(--gray); line-height: 1.7; max-width: 260px; }
-
-  /* History tab */
-  .history-item { background: var(--card); border: 1px solid var(--border2); padding: 1rem; margin-bottom: 0.75rem; }
-  .history-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
-  .history-date { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
-  .history-platforms { display: flex; gap: 4px; }
-  .history-platform-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .history-text { font-size: 13px; color: var(--gray2); line-height: 1.6; }
-
-  /* Setup tab */
-  .setup-section { margin-bottom: 2rem; }
-  .setup-platform-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-  .setup-icon { font-size: 20px; }
-  .setup-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; }
-  .setup-status { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 2px 8px; border-radius: 2px; }
-  .setup-status.connected { background: rgba(76,175,125,0.15); color: var(--green); }
-  .setup-status.pending { background: rgba(253,191,18,0.1); color: var(--gold); }
-  .setup-input-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-  .setup-input { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border2); color: var(--white); padding: 0.6rem 0.85rem; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; outline: none; letter-spacing: 0.05em; }
-  .setup-input:focus { border-color: rgba(253,191,18,0.35); }
-  .setup-save-btn { background: var(--gold); color: #000; border: none; padding: 0.6rem 1rem; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
-  .setup-help { font-size: 12px; color: var(--gray); line-height: 1.7; }
-  .setup-help a { color: var(--gold); text-decoration: none; }
-  .setup-divider { border: none; border-top: 1px solid var(--border2); margin: 1.5rem 0; }
-
-  /* Toast */
-  #toast {
-    position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
-    background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold);
-    padding: 0.85rem 1.25rem; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--white); transform: translateY(100px); opacity: 0;
-    transition: all 0.3s; pointer-events: none; max-width: 320px;
+  .wizard-step.completed .step-number {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
   }
-  #toast.show { transform: translateY(0); opacity: 1; }
-  #toast.error { border-left-color: var(--red); }
-  #toast.success { border-left-color: var(--green); }
+  .wizard-step.completed .step-number::before {
+    content: '✓';
+  }
+  .step-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .wizard-step.active .step-label {
+    color: var(--gold);
+  }
+  .wizard-step.completed .step-label {
+    color: var(--green);
+  }
 
-  /* ── REVIEW STATE ── */
-  .post-card.review-mode .post-text {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(253,191,18,0.15);
-    color: #ddd;
-    cursor: default;
-    resize: none;
+  /* ── MAIN GRID ── */
+  .main-container {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+    min-height: calc(100vh - 280px);
   }
-  .post-card.saved-mode {
-    border-color: rgba(76,175,125,0.4);
+
+  /* ── LEFT PANEL ── */
+  .compose-panel {
+    padding: 2.5rem;
+    overflow-y: auto;
   }
-  .post-card.saved-mode .post-card-header {
-    border-bottom-color: rgba(76,175,125,0.2);
+
+  .panel-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 4px;
+    position: relative;
   }
-  .review-bar {
+  .panel-section.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 20px var(--gold-glow);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.06em;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.6rem 1rem;
-    background: rgba(253,191,18,0.05);
-    border-top: 1px solid rgba(253,191,18,0.12);
+  }
+  .section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #000;
+    font-size: 16px;
+  }
+
+  /* ── QUICK START TEMPLATES ── */
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .template-card {
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+  }
+  .template-card:hover {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+    transform: translateY(-2px);
+  }
+  .template-icon {
+    font-size: 28px;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+  .template-name {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+  .template-desc {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
+    color: var(--gray2);
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
   }
-  .review-label { color: var(--gold); margin-right: 0.25rem; flex: 1; }
-  .btn-save {
-    background: var(--green); color: #fff; border: none;
-    padding: 0.4rem 1rem; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; cursor: pointer;
+  .form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid var(--border2);
+    color: var(--white);
+    padding: 1rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    outline: none;
+    transition: all 0.2s;
+    resize: vertical;
+    min-height: 120px;
+    border-radius: 4px;
   }
-  .btn-edit {
-    background: transparent; color: var(--gold);
-    border: 1px solid rgba(253,191,18,0.4);
-    padding: 0.4rem 1rem; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; cursor: pointer;
+  .form-textarea:focus {
+    border-color: var(--gold);
+    background: rgba(253,191,18,0.03);
   }
-  .btn-delete {
-    background: transparent; color: var(--red);
-    border: 1px solid rgba(224,85,85,0.3);
-    padding: 0.4rem 1rem; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; cursor: pointer;
+  .form-textarea::placeholder {
+    color: var(--gray);
+    font-style: italic;
   }
-  .btn-save:hover { background: #3d9e6a; }
-  .btn-edit:hover { background: rgba(253,191,18,0.1); }
-  .btn-delete:hover { background: rgba(224,85,85,0.1); }
-  .saved-badge {
-    display: inline-block;
-    background: rgba(76,175,125,0.15);
-    color: var(--green);
-    border: 1px solid rgba(76,175,125,0.3);
-    padding: 2px 10px;
+  .char-counter {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--gray);
+    text-align: right;
+    margin-top: 0.5rem;
   }
 
-  @media (max-width: 900px) {
-    .main { grid-template-columns: 1fr; }
-    .compose-panel { border-right: none; border-bottom: 1px solid var(--border); }
-    .platform-grid { grid-template-columns: repeat(5,1fr); }
+  /* ── PLATFORM SELECTOR ── */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  .platform-card {
+    background: var(--card2);
+    border: 2px solid var(--border2);
+    padding: 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+    position: relative;
+  }
+  .platform-card:hover {
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+  }
+  .platform-card.active {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+  }
+  .platform-card.active::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .platform-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .platform-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray2);
+  }
+  .platform-card.active .platform-name {
+    color: var(--gold);
+  }
+
+  /* ── OPTIONS ── */
+  .option-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .option-chip {
+    background: var(--card2);
+    border: 2px solid var(--border2);
+    color: var(--gray2);
+    padding: 0.5rem 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 20px;
+  }
+  .option-chip:hover {
+    border-color: rgba(255,255,255,0.3);
+    color: var(--white);
+  }
+  .option-chip.active {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: #000;
+  }
+
+  /* ── BIG GENERATE BUTTON ── */
+  .generate-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+    color: #000;
+    border: none;
+    padding: 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(253,191,18,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .generate-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+  .generate-btn:hover::before {
+    left: 100%;
+  }
+  .generate-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(253,191,18,0.5);
+  }
+  .generate-btn:disabled {
+    background: #333;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .btn-icon {
+    font-size: 32px;
+  }
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(0,0,0,0.3);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── RIGHT PANEL: RESULTS ── */
+  .results-panel {
+    background: var(--dark);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .results-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .results-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+  .results-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .results-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+  }
+
+  /* ── POST CARDS ── */
+  .post-card {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .post-card:hover {
+    border-color: var(--gold);
+  }
+  .post-header {
+    padding: 1rem 1.25rem;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .post-platform {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .post-platform-icon {
+    font-size: 20px;
+  }
+  .post-platform-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .post-char-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    color: var(--gray);
+  }
+  .post-char-count.ok { color: var(--green); }
+  .post-char-count.warn { color: var(--gold); }
+  .post-char-count.over { color: var(--red); }
+  .post-body {
+    padding: 1.25rem;
+  }
+  .post-text {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    min-height: 100px;
+  }
+  .post-footer {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border2);
+    display: flex;
+    gap: 0.75rem;
+  }
+  .post-btn {
+    flex: 1;
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    color: var(--gray2);
+    padding: 0.6rem 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 3px;
+  }
+  .post-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .post-btn.primary {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000;
+  }
+  .post-btn.primary:hover {
+    background: var(--gold2);
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .empty-icon {
+    font-size: 64px;
+    margin-bottom: 1.5rem;
+    opacity: 0.2;
+  }
+  .empty-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.06em;
+    color: var(--gray);
+    margin-bottom: 1rem;
+  }
+  .empty-text {
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 320px;
+  }
+  .empty-pointer {
+    margin-top: 2rem;
+    font-size: 48px;
+    opacity: 0.3;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+  }
+
+  /* ── TOAST NOTIFICATIONS ── */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    padding: 1rem 1.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+    transform: translateY(150px);
+    opacity: 0;
+    transition: all 0.4s;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    max-width: 400px;
+  }
+  #toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  #toast.success { border-left-color: var(--green); }
+  #toast.error { border-left-color: var(--red); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1200px) {
+    .main-container {
+      grid-template-columns: 1fr;
+    }
+    .results-panel {
+      border-left: none;
+      border-top: 1px solid var(--border);
+      min-height: 500px;
+    }
   }
 </style>
-  <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
 
-<!-- ══ LOGIN ══ -->
-<div id="login-screen" style="display:flex;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:#080808;align-items:center;justify-content:center;flex-direction:column;">
-  <img src="images/iar_logo_transparent.png" style="height:60px;margin-bottom:1.5rem;">
-  <div style="background:#161616;border-top:3px solid #FDBF12;padding:2.5rem;width:340px;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;margin-bottom:0.25rem;">SOCIAL AGENT</div>
-    <div style="font-family:sans-serif;font-size:12px;color:#888;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.5rem;">I Am Redemption</div>
-
-    <input id="pw-input" type="password" placeholder="Enter password"
-      style="width:100%;padding:12px 40px 12px 12px;background:#111;border:1px solid #444;color:#fff;font-size:16px;box-sizing:border-box;outline:none;margin-bottom:4px;"
-      onkeyup="if(event.key==='Enter')tryLogin()">
-
-    <div style="text-align:right;margin-bottom:12px;">
-      <span onclick="toggleShow(this)" style="font-size:12px;color:#FDBF12;cursor:pointer;font-family:sans-serif;">Show Password</span>
+<!-- WELCOME BANNER -->
+<div class="welcome-banner">
+  <div class="welcome-content">
+    <div class="welcome-greeting">Hi Shawn! LET'S GO!!</div>
+    <div class="welcome-tagline">Social Command Center</div>
+    <div class="welcome-subtitle">
+      Create professional social media posts in 3 simple steps. AI does the heavy lifting — you just click and go.
     </div>
-
-    <div id="pw-shown" style="display:none;background:#000;border:1px solid #FDBF12;color:#FDBF12;font-family:monospace;font-size:18px;padding:8px 12px;text-align:center;margin-bottom:12px;letter-spacing:0.15em;"></div>
-
-    <button onclick="tryLogin()" style="width:100%;padding:14px;background:#FDBF12;color:#000;border:none;font-size:18px;font-weight:900;font-family:sans-serif;cursor:pointer;letter-spacing:0.1em;margin-bottom:12px;">ACCESS AGENT</button>
-
-    <div id="msg-box" style="display:none;padding:10px 12px;font-family:sans-serif;font-size:13px;text-align:center;border-radius:2px;"></div>
   </div>
 </div>
 
-<!-- ══ APP ══ -->
-<div id="app" style="display:none;">
-  <!-- Top Bar -->
-  <div class="topbar">
-    <div class="topbar-brand">
-      <img src="images/iar_logo_transparent.png" alt="I Am Redemption" class="topbar-logo-img">
-      <div class="topbar-logo-text">
-        <div class="topbar-logo-main">I AM <span>REDEMPTION</span></div>
-        <div class="topbar-logo-sub">Social Agent — AI Powered</div>
-      </div>
+<!-- STEP WIZARD -->
+<div class="wizard">
+  <div class="wizard-steps">
+    <div class="wizard-step active" id="step-1">
+      <div class="step-number">1</div>
+      <div class="step-label">What to post</div>
     </div>
-    <div class="topbar-right">
-      <div class="api-status">
-        <div class="status-dot" id="api-dot"></div>
-        <span id="api-status-text">AI Ready</span>
-      </div>
-      <button class="logout-btn" onclick="doLogout()">Log Out</button>
+    <div class="wizard-step" id="step-2">
+      <div class="step-number">2</div>
+      <div class="step-label">Pick platforms</div>
+    </div>
+    <div class="wizard-step" id="step-3">
+      <div class="step-number">3</div>
+      <div class="step-label">Generate & use</div>
     </div>
   </div>
+</div>
 
-  <!-- Main -->
-  <div class="main">
+<!-- MAIN CONTAINER -->
+<div class="main-container">
+  
+  <!-- LEFT: COMPOSE PANEL -->
+  <div class="compose-panel">
+    
+    <!-- STEP 1: QUICK START TEMPLATES -->
+    <div class="panel-section active" id="section-1">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-number">1</span>
+          Quick Start Templates
+          <span class="help-icon" data-tip="Click any template to auto-fill everything. You can edit it after!">?</span>
+        </div>
+      </div>
+      
+      <div class="template-grid">
+        <div class="template-card" onclick="loadTemplate('motivation')">
+          <span class="template-icon">💪</span>
+          <div class="template-name">Monday Motivation</div>
+          <div class="template-desc">Inspiring message to start the week strong</div>
+        </div>
+        
+        <div class="template-card" onclick="loadTemplate('veteran')">
+          <span class="template-icon">🎖️</span>
+          <div class="template-name">Veteran Spotlight</div>
+          <div class="template-desc">Highlight a community member's story</div>
+        </div>
+        
+        <div class="template-card" onclick="loadTemplate('event')">
+          <span class="template-icon">📅</span>
+          <div class="template-name">Event Announcement</div>
+          <div class="template-desc">Promote a run, meeting, or gathering</div>
+        </div>
+        
+        <div class="template-card" onclick="loadTemplate('documentary')">
+          <span class="template-icon">🎬</span>
+          <div class="template-name">Watch the Documentary</div>
+          <div class="template-desc">Drive views to Prime Video or Tubi</div>
+        </div>
+        
+        <div class="template-card" onclick="loadTemplate('volunteer')">
+          <span class="template-icon">🤝</span>
+          <div class="template-name">Volunteer Recruitment</div>
+          <div class="template-desc">Get people involved in the mission</div>
+        </div>
+        
+        <div class="template-card" onclick="loadTemplate('custom')">
+          <span class="template-icon">✍️</span>
+          <div class="template-name">Write Your Own</div>
+          <div class="template-desc">Start from scratch with your own idea</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          Or describe what you want to post about
+          <span class="help-icon" data-tip="Tell the AI what you want to say. Be specific! Example: 'Promote Saturday morning run at 6am, meet at Zilker Park'">?</span>
+        </label>
+        <textarea 
+          class="form-textarea" 
+          id="content-input" 
+          placeholder="Example: Promote our Saturday morning run at Zilker Park. 6am start, all fitness levels welcome. Mention we grab coffee after at Jo's."
+          oninput="updateCharCounter(this); markStepComplete(1);"
+        ></textarea>
+        <div class="char-counter" id="input-counter">0 characters</div>
+      </div>
+    </div>
 
-    <!-- LEFT: COMPOSE -->
-    <div class="compose-panel">
-      <div class="section-label">Select Platforms</div>
+    <!-- STEP 2: PLATFORMS -->
+    <div class="panel-section" id="section-2">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-number">2</span>
+          Where to Post
+          <span class="help-icon" data-tip="Click platforms you want posts for. Each platform gets a custom version optimized for that audience.">?</span>
+        </div>
+      </div>
+      
       <div class="platform-grid">
-        <div class="platform-toggle active" data-platform="facebook" onclick="togglePlatform(this)">
-          <span class="pt-check">✓</span>
-          <span class="pt-icon">📘</span>
-          <span class="pt-name">Facebook</span>
+        <div class="platform-card" onclick="togglePlatform(this, 'facebook')">
+          <span class="platform-icon">📘</span>
+          <div class="platform-name">Facebook</div>
         </div>
-        <div class="platform-toggle active" data-platform="instagram" onclick="togglePlatform(this)">
-          <span class="pt-check">✓</span>
-          <span class="pt-icon">📷</span>
-          <span class="pt-name">Instagram</span>
+        
+        <div class="platform-card" onclick="togglePlatform(this, 'instagram')">
+          <span class="platform-icon">📸</span>
+          <div class="platform-name">Instagram</div>
         </div>
-        <div class="platform-toggle active" data-platform="linkedin" onclick="togglePlatform(this)">
-          <span class="pt-check">✓</span>
-          <span class="pt-icon">💼</span>
-          <span class="pt-name">LinkedIn</span>
+        
+        <div class="platform-card" onclick="togglePlatform(this, 'linkedin')">
+          <span class="platform-icon">💼</span>
+          <div class="platform-name">LinkedIn</div>
         </div>
-        <div class="platform-toggle" data-platform="twitter" onclick="togglePlatform(this)">
-          <span class="pt-check">✓</span>
-          <span class="pt-icon">𝕏</span>
-          <span class="pt-name">X/Twitter</span>
-        </div>
-        <div class="platform-toggle" data-platform="youtube" onclick="togglePlatform(this)">
-          <span class="pt-check">✓</span>
-          <span class="pt-icon">▶️</span>
-          <span class="pt-name">YouTube</span>
+        
+        <div class="platform-card" onclick="togglePlatform(this, 'twitter')">
+          <span class="platform-icon">🐦</span>
+          <div class="platform-name">Twitter/X</div>
         </div>
       </div>
+    </div>
 
-      <div class="section-label">What's the Post About?</div>
-
-      <div class="form-group">
-        <label class="form-label">Post Type</label>
-        <select class="form-select" id="post-type">
-          <option value="event">Community Event / Run Recap</option>
-          <option value="mission">Mission & Inspiration</option>
-          <option value="podcast">New Podcast Episode</option>
-          <option value="story">Member Story / Testimonial</option>
-          <option value="documentary">Documentary Promo</option>
-          <option value="volunteer">Volunteer Recruitment</option>
-          <option value="donation">Fundraising / Donation Drive</option>
-          <option value="custom">Custom / Other</option>
-        </select>
+    <!-- STEP 3: OPTIONS -->
+    <div class="panel-section" id="section-3">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-number">3</span>
+          Style & Tone
+          <span class="help-icon" data-tip="Pick how the post should sound. You can always edit it after!">?</span>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">Tell the AI what happened (be specific!)</label>
-        <textarea class="form-textarea" id="raw-content" rows="5"
-          placeholder="e.g. Saturday morning run at Zilker Park — 18 people showed up, including 4 first-timers. Weather was perfect. Marcus hit his 30-day streak. Great energy all around."></textarea>
-        <div class="form-hint">The more detail you give, the better the posts. Names, numbers, emotions, outcomes.</div>
-      </div>
-
+      
       <div class="form-group">
         <label class="form-label">Tone</label>
-        <div class="tone-chips">
-          <div class="tone-chip active" data-tone="authentic" onclick="selectTone(this)">Authentic</div>
-          <div class="tone-chip" data-tone="motivational" onclick="selectTone(this)">Motivational</div>
-          <div class="tone-chip" data-tone="raw" onclick="selectTone(this)">Raw & Honest</div>
-          <div class="tone-chip" data-tone="celebratory" onclick="selectTone(this)">Celebratory</div>
-          <div class="tone-chip" data-tone="urgent" onclick="selectTone(this)">Call to Action</div>
-          <div class="tone-chip" data-tone="story" onclick="selectTone(this)">Storytelling</div>
+        <div class="option-chips">
+          <div class="option-chip active" onclick="selectOption(this, 'tone', 'motivational')">Motivational</div>
+          <div class="option-chip" onclick="selectOption(this, 'tone', 'casual')">Casual & Friendly</div>
+          <div class="option-chip" onclick="selectOption(this, 'tone', 'professional')">Professional</div>
+          <div class="option-chip" onclick="selectOption(this, 'tone', 'direct')">Direct & Bold</div>
         </div>
       </div>
-
+      
       <div class="form-group">
-        <label class="form-label">Include Hashtags?</label>
-        <select class="form-select" id="hashtag-pref">
-          <option value="yes">Yes — add relevant hashtags</option>
-          <option value="minimal">Minimal (3-5 max)</option>
-          <option value="no">No hashtags</option>
-        </select>
+        <label class="form-label">Hashtags</label>
+        <div class="option-chips">
+          <div class="option-chip active" onclick="selectOption(this, 'hashtags', 'yes')">Include Hashtags</div>
+          <div class="option-chip" onclick="selectOption(this, 'hashtags', 'minimal')">Minimal (3-5)</div>
+          <div class="option-chip" onclick="selectOption(this, 'hashtags', 'no')">No Hashtags</div>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">Call to Action (optional)</label>
-        <input type="text" class="form-input" id="cta-text" placeholder="e.g. Join us Saturday — link in bio">
-      </div>
-
-      <button class="generate-btn" id="generate-btn" onclick="generatePosts()">
-        <div class="spinner" id="btn-spinner"></div>
-        <span class="btn-icon" id="btn-icon">✦</span>
-        <span id="btn-text">GENERATE POSTS WITH AI</span>
-      </button>
     </div>
 
-    <!-- RIGHT: RESULTS -->
-    <div class="results-panel">
-      <div class="results-header">
-        <div class="section-label" style="margin-bottom:0;">Posts & Results</div>
-        <div class="results-tabs">
-          <div class="rtab active" onclick="switchTab('posts',this)">Generated</div>
-          <div class="rtab" onclick="switchTab('history',this)">History</div>
-          <div class="rtab" onclick="switchTab('setup',this)">⚙ Setup</div>
+    <!-- GENERATE BUTTON -->
+    <button class="generate-btn" id="generate-btn" onclick="generatePosts()">
+      <div class="spinner" id="spinner"></div>
+      <span class="btn-icon" id="btn-icon">🚀</span>
+      <span id="btn-text">GENERATE POSTS WITH AI</span>
+    </button>
+
+  </div>
+
+  <!-- RIGHT: RESULTS PANEL -->
+  <div class="results-panel">
+    <div class="results-header">
+      <div class="results-title">Your Posts</div>
+      <div class="results-count" id="results-count">Click generate to create posts</div>
+    </div>
+    <div class="results-body" id="results-body">
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <div class="empty-title">Nothing here yet</div>
+        <div class="empty-text">
+          Fill out the steps on the left, then click the big "Generate Posts" button. AI will create custom posts for each platform you selected.
         </div>
-      </div>
-      <div class="results-body">
-
-        <!-- POSTS TAB -->
-        <div id="tab-posts">
-          <div id="copy-all-bar" style="display:none;margin-bottom:1rem;">
-            <button onclick="copyAllPosts()" style="width:100%;background:var(--gold-dim);border:1px solid var(--border);color:var(--gold);padding:0.65rem;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;">
-              📋 COPY ALL POSTS TO CLIPBOARD
-            </button>
-          </div>
-          <div class="empty-state" id="empty-state">
-            <div class="empty-icon">✦</div>
-            <div class="empty-title">Ready to Post</div>
-            <div class="empty-sub">Fill in what's happening and hit Generate. Review and edit each post, then copy to post manually or connect your API keys to publish directly.</div>
-          </div>
-          <div id="posts-container"></div>
-        </div>
-
-        <!-- HISTORY TAB -->
-        <div id="tab-history" style="display:none;">
-          <div id="history-container">
-            <div class="empty-state">
-              <div class="empty-icon">📋</div>
-              <div class="empty-title">No History Yet</div>
-              <div class="empty-sub">Posts you generate and publish will appear here.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SETUP TAB -->
-        <div id="tab-setup" style="display:none;">
-          <p style="font-size:13px;color:var(--gray2);line-height:1.8;margin-bottom:1.5rem;">
-            Enter your API tokens for each platform below. These are saved in your browser only — never sent anywhere except directly to the platform APIs.
-          </p>
-
-          <!-- Anthropic API Key -->
-          <div class="setup-section">
-            <div class="setup-platform-header">
-              <span class="setup-icon">🤖</span>
-              <span class="setup-name" style="font-size:18px;">AI (Anthropic)</span>
-              <span class="setup-status pending" id="ai-status">Not Set</span>
-            </div>
-            <div class="setup-input-row">
-              <input type="password" class="setup-input" id="anthropic-key" placeholder="sk-ant-...">
-              <button class="setup-save-btn" onclick="saveApiKey()">Save</button>
-            </div>
-            <p class="setup-help">
-              Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> →
-              API Keys → Create Key. Required for AI post generation.
-            </p>
-          </div>
-          <hr class="setup-divider">
-
-          <!-- Facebook -->
-          <div class="setup-section">
-            <div class="setup-platform-header">
-              <span class="setup-icon">📘</span>
-              <span class="setup-name">Facebook</span>
-              <span class="setup-status pending" id="fb-status">Not Connected</span>
-            </div>
-            <div class="setup-input-row">
-              <input type="password" class="setup-input" id="fb-token" placeholder="Page Access Token">
-              <input type="text" class="setup-input" id="fb-page-id" placeholder="Page ID">
-              <button class="setup-save-btn" onclick="saveToken('facebook')">Save</button>
-            </div>
-            <p class="setup-help">
-              Get your token at <a href="https://developers.facebook.com" target="_blank">developers.facebook.com</a> →
-              My Apps → Create App → Add "Pages" product → Generate Page Access Token.
-            </p>
-          </div>
-          <hr class="setup-divider">
-
-          <!-- Instagram -->
-          <div class="setup-section">
-            <div class="setup-platform-header">
-              <span class="setup-icon">📷</span>
-              <span class="setup-name">Instagram</span>
-              <span class="setup-status pending" id="ig-status">Not Connected</span>
-            </div>
-            <div class="setup-input-row">
-              <input type="password" class="setup-input" id="ig-token" placeholder="Access Token (same as FB)">
-              <input type="text" class="setup-input" id="ig-account-id" placeholder="Instagram Account ID">
-              <button class="setup-save-btn" onclick="saveToken('instagram')">Save</button>
-            </div>
-            <p class="setup-help">
-              Uses the same Meta token as Facebook. Find your Instagram Account ID in
-              <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a> →
-              query <code style="color:var(--gold);font-size:11px;">me/instagram_accounts</code>
-            </p>
-          </div>
-          <hr class="setup-divider">
-
-          <!-- LinkedIn -->
-          <div class="setup-section">
-            <div class="setup-platform-header">
-              <span class="setup-icon">💼</span>
-              <span class="setup-name">LinkedIn</span>
-              <span class="setup-status pending" id="li-status">Not Connected</span>
-            </div>
-            <div class="setup-input-row">
-              <input type="password" class="setup-input" id="li-token" placeholder="Access Token">
-              <input type="text" class="setup-input" id="li-org-id" placeholder="Organization ID (urn:li:org:XXXXX)">
-              <button class="setup-save-btn" onclick="saveToken('linkedin')">Save</button>
-            </div>
-            <p class="setup-help">
-              Get token at <a href="https://developer.linkedin.com" target="_blank">developer.linkedin.com</a> →
-              Create App → Request "Share on LinkedIn" + "Organization Social Action" permissions → Generate token.
-            </p>
-          </div>
-          <hr class="setup-divider">
-
-          <!-- X/Twitter -->
-          <div class="setup-section">
-            <div class="setup-platform-header">
-              <span class="setup-icon">𝕏</span>
-              <span class="setup-name">X / Twitter</span>
-              <span class="setup-status pending" id="tw-status">Not Connected</span>
-            </div>
-            <div class="setup-input-row">
-              <input type="password" class="setup-input" id="tw-token" placeholder="Bearer Token">
-              <button class="setup-save-btn" onclick="saveToken('twitter')">Save</button>
-            </div>
-            <p class="setup-help">
-              Requires a paid X Developer account ($100/mo Basic tier for posting).
-              Get token at <a href="https://developer.twitter.com" target="_blank">developer.twitter.com</a>.
-            </p>
-          </div>
-          <hr class="setup-divider">
-
-          <!-- YouTube -->
-          <div class="setup-section">
-            <div class="setup-platform-header">
-              <span class="setup-icon">▶️</span>
-              <span class="setup-name">YouTube</span>
-              <span class="setup-status pending" id="yt-status">Not Connected</span>
-            </div>
-            <div class="setup-input-row">
-              <input type="password" class="setup-input" id="yt-token" placeholder="OAuth2 Access Token">
-              <button class="setup-save-btn" onclick="saveToken('youtube')">Save</button>
-            </div>
-            <p class="setup-help">
-              Get token via <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a> →
-              Enable YouTube Data API v3 → Create OAuth credentials → Authorize.
-              YouTube posts community updates (requires 500+ subscribers).
-            </p>
-          </div>
-        </div>
-
+        <div class="empty-pointer">←</div>
       </div>
     </div>
   </div>
+
 </div>
 
+<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════
-let selectedTone = 'authentic';
-let postHistory = JSON.parse(localStorage.getItem('iar_post_history') || '[]');
+// ══════════════════════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════════════════════
+let selectedPlatforms = [];
+let selectedTone = 'motivational';
+let selectedHashtags = 'yes';
 let generatedPosts = {};
 
-// ══════════════════════════════════════════
-//  LOGIN
-// ══════════════════════════════════════════
-function toggleShow(lnk) {
-  var inp = document.getElementById('pw-input');
-  var box = document.getElementById('pw-shown');
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    box.textContent = inp.value.length ? inp.value : '(nothing typed yet)';
-    box.style.display = 'block';
-    lnk.textContent = 'Hide Password';
-  } else {
-    inp.type = 'password';
-    box.style.display = 'none';
-    lnk.textContent = 'Show Password';
+// Platform config
+const PLATFORMS = {
+  facebook: { name: 'Facebook', icon: '📘', maxChars: 63206, style: 'Conversational and community-focused' },
+  instagram: { name: 'Instagram', icon: '📸', maxChars: 2200, style: 'Visual and inspiring with emojis' },
+  linkedin: { name: 'LinkedIn', icon: '💼', maxChars: 3000, style: 'Professional and mission-driven' },
+  twitter: { name: 'Twitter/X', icon: '🐦', maxChars: 280, style: 'Concise and punchy' }
+};
+
+// Templates
+const TEMPLATES = {
+  motivation: {
+    title: 'Monday Motivation',
+    content: 'Create an inspiring post about pushing through challenges and showing up even when it\'s hard. Reference the IAR community and how we support each other. Include a call to join us for a run or meeting.',
+    platforms: ['facebook', 'instagram'],
+    tone: 'motivational',
+    hashtags: 'yes'
+  },
+  veteran: {
+    title: 'Veteran Spotlight',
+    content: 'Highlight one of our community members who is making progress in their recovery journey. Talk about their strength, dedication, and how the IAR community has supported them. (You can fill in specific details about the veteran)',
+    platforms: ['facebook', 'instagram', 'linkedin'],
+    tone: 'motivational',
+    hashtags: 'minimal'
+  },
+  event: {
+    title: 'Event Announcement',
+    content: 'Promote our next community event - a group run or Monday night meeting. Include when and where we meet, and that all are welcome. Emphasize the brotherhood and community aspect.',
+    platforms: ['facebook', 'instagram'],
+    tone: 'casual',
+    hashtags: 'yes'
+  },
+  documentary: {
+    title: 'Watch the Documentary',
+    content: 'Encourage people to watch the I Am Redemption documentary on Prime Video or Tubi. Talk about how it shows real stories of transformation and recovery. Include a link or mention where to watch.',
+    platforms: ['facebook', 'instagram', 'linkedin'],
+    tone: 'direct',
+    hashtags: 'minimal'
+  },
+  volunteer: {
+    title: 'Volunteer Recruitment',
+    content: 'We need volunteers to help with upcoming events, mentoring, or administrative support. Explain how giving back helps both the community and the volunteer. Include how to get involved.',
+    platforms: ['facebook', 'linkedin'],
+    tone: 'professional',
+    hashtags: 'minimal'
+  },
+  custom: {
+    title: 'Custom Post',
+    content: '',
+    platforms: [],
+    tone: 'motivational',
+    hashtags: 'yes'
   }
-}
+};
 
-function showMsg(text, color) {
-  var box = document.getElementById('msg-box');
-  box.textContent = text;
-  box.style.display = 'block';
-  box.style.background = color === 'red' ? 'rgba(224,85,85,0.15)' : 'rgba(76,175,125,0.15)';
-  box.style.color = color === 'red' ? '#e05555' : '#4caf7d';
-  box.style.border = '1px solid ' + (color === 'red' ? 'rgba(224,85,85,0.4)' : 'rgba(76,175,125,0.4)');
-}
+// IAR Context for AI
+const IAR_CONTEXT = `I Am Redemption (IAR) is a veteran-founded 501(c)(3) nonprofit recovery community based in Austin, Texas. Founded by Shawn Gant, IAR helps veterans and civilians recover from addiction, trauma, and life challenges through:
 
-function tryLogin() {
-  var inp = document.getElementById('pw-input');
-  var val = inp.value.trim();
+- Community runs and fitness (Monday nights, Saturday mornings)
+- Peer support and brotherhood
+- The 5-phase transformation system
+- Weekly meetings and accountability
+- The IAR documentary (available on Prime Video and Tubi)
 
-  if (val.length === 0) {
-    showMsg('⚠ Please enter the password.', 'red');
-    inp.focus();
-    return;
+Core values: Built Different. We don't just talk about change - we live it. Military discipline meets civilian recovery. No excuses, just action.
+
+Tone: Direct, authentic, motivating. We speak to people who are ready to do the work.`;
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  TEMPLATE LOADING
+// ══════════════════════════════════════════════════════════════════════════════
+function loadTemplate(type) {
+  const template = TEMPLATES[type];
+  
+  document.getElementById('content-input').value = template.content;
+  updateCharCounter(document.getElementById('content-input'));
+  
+  // Auto-select platforms
+  selectedPlatforms = [];
+  document.querySelectorAll('.platform-card').forEach(card => card.classList.remove('active'));
+  
+  if (template.platforms.length > 0) {
+    template.platforms.forEach(platform => {
+      const card = document.querySelector(`[onclick*="${platform}"]`);
+      if (card) {
+        card.classList.add('active');
+        selectedPlatforms.push(platform);
+      }
+    });
   }
-
-  if (val === 'Admin') {
-    showMsg('✓ Correct! Loading dashboard...', 'green');
-    document.getElementById('pw-input').disabled = true;
-    setTimeout(function() {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      try { loadSavedTokens(); } catch(e) {}
-      try { renderHistory(); } catch(e) {}
-    }, 600);
-  } else {
-    showMsg('✗ Wrong password. You typed: "' + val + '" (' + val.length + ' characters)', 'red');
-    inp.value = '';
-    inp.focus();
-  }
-}
-
-function doLogout() { location.reload(); }
-
-// ══════════════════════════════════════════
-//  PLATFORM & TONE TOGGLES
-// ══════════════════════════════════════════
-function togglePlatform(el) {
-  el.classList.toggle('active');
-}
-function getActivePlatforms() {
-  return [...document.querySelectorAll('.platform-toggle.active')].map(el => el.dataset.platform);
-}
-function selectTone(el) {
-  document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  selectedTone = el.dataset.tone;
-}
-
-// ══════════════════════════════════════════
-//  TABS
-// ══════════════════════════════════════════
-function switchTab(name, el) {
-  ['posts','history','setup'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===name ? 'block' : 'none';
-  });
-  document.querySelectorAll('.rtab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ══════════════════════════════════════════
-//  TOKEN MANAGEMENT
-// ══════════════════════════════════════════
-function saveToken(platform) {
-  const tokenEl = document.getElementById(platform.substring(0,2)+'-token') ||
-                  document.getElementById('fb-token');
-  const map = {
-    facebook: { token: 'fb-token', extra: 'fb-page-id', extraKey: 'fb_page_id', key: 'fb_token', statusId: 'fb-status' },
-    instagram: { token: 'ig-token', extra: 'ig-account-id', extraKey: 'ig_account_id', key: 'ig_token', statusId: 'ig-status' },
-    linkedin: { token: 'li-token', extra: 'li-org-id', extraKey: 'li_org_id', key: 'li_token', statusId: 'li-status' },
-    twitter: { token: 'tw-token', extra: null, key: 'tw_token', statusId: 'tw-status' },
-    youtube: { token: 'yt-token', extra: null, key: 'yt_token', statusId: 'yt-status' },
-  };
-  const cfg = map[platform];
-  const token = document.getElementById(cfg.token)?.value?.trim();
-  if (!token) { showToast('Enter a token first', 'error'); return; }
-  localStorage.setItem(cfg.key, token);
-  if (cfg.extra) {
-    const extraVal = document.getElementById(cfg.extra)?.value?.trim();
-    if (extraVal) localStorage.setItem(cfg.extraKey, extraVal);
-  }
-  const statusEl = document.getElementById(cfg.statusId);
-  statusEl.textContent = 'Connected';
-  statusEl.className = 'setup-status connected';
-  showToast(`${platform} token saved ✓`, 'success');
-}
-
-function loadSavedTokens() {
-  // Check Anthropic key
-  if (localStorage.getItem('anthropic_key')) {
-    const aiStatus = document.getElementById('ai-status');
-    if (aiStatus) { aiStatus.textContent = 'Connected'; aiStatus.className = 'setup-status connected'; }
-    document.getElementById('api-dot').className = 'status-dot on';
-  }
-  const checks = [
-    { key: 'fb_token', id: 'fb-status', inputId: 'fb-token' },
-    { key: 'ig_token', id: 'ig-status', inputId: 'ig-token' },
-    { key: 'li_token', id: 'li-status', inputId: 'li-token' },
-    { key: 'tw_token', id: 'tw-status', inputId: 'tw-token' },
-    { key: 'yt_token', id: 'yt-status', inputId: 'yt-token' },
-  ];
-  let anyConnected = false;
-  checks.forEach(c => {
-    const val = localStorage.getItem(c.key);
-    if (val) {
-      const el = document.getElementById(c.id);
-      if (el) { el.textContent = 'Connected'; el.className = 'setup-status connected'; }
-      const inp = document.getElementById(c.inputId);
-      if (inp) inp.placeholder = '••••••••••••••••';
-      anyConnected = true;
+  
+  // Set tone
+  selectedTone = template.tone;
+  document.querySelectorAll('[onclick*="tone"]').forEach(chip => {
+    chip.classList.remove('active');
+    if (chip.textContent.toLowerCase().includes(template.tone)) {
+      chip.classList.add('active');
     }
   });
-  const dot = document.getElementById('api-dot');
-  var hasAnthropicKey = !!localStorage.getItem('anthropic_key');
-  if (anyConnected || hasAnthropicKey) {
-    dot.className = 'status-dot on';
+  
+  // Set hashtags
+  selectedHashtags = template.hashtags;
+  document.querySelectorAll('[onclick*="hashtags"]').forEach(chip => {
+    chip.classList.remove('active');
+    if (chip.textContent.toLowerCase().includes(template.hashtags)) {
+      chip.classList.add('active');
+    }
+  });
+  
+  markStepComplete(1);
+  markStepComplete(2);
+  
+  showToast(`✓ Template loaded: ${template.title}`, 'success');
+  
+  // Scroll to generate button
+  setTimeout(() => {
+    document.getElementById('generate-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  UI INTERACTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+function updateCharCounter(textarea) {
+  const count = textarea.value.length;
+  document.getElementById('input-counter').textContent = `${count} character${count === 1 ? '' : 's'}`;
+}
+
+function togglePlatform(card, platform) {
+  card.classList.toggle('active');
+  
+  const index = selectedPlatforms.indexOf(platform);
+  if (index > -1) {
+    selectedPlatforms.splice(index, 1);
   } else {
-    dot.className = 'status-dot off';
+    selectedPlatforms.push(platform);
+  }
+  
+  if (selectedPlatforms.length > 0) {
+    markStepComplete(2);
   }
 }
 
-// ══════════════════════════════════════════
-//  AI GENERATION
-// ══════════════════════════════════════════
-const PLATFORM_RULES = {
-  facebook: { name: 'Facebook', maxChars: 63206, style: 'conversational and community-focused. Can be longer (2-4 paragraphs). Use line breaks for readability. Include a clear call to action at the end.', badge: 'badge-fb', icon: '📘', color: '#1877f2' },
-  instagram: { name: 'Instagram', maxChars: 2200, style: 'visual and punchy. Open with a strong hook line. Use short punchy sentences and line breaks. Add 8-15 relevant hashtags at the end separated from the main text.', badge: 'badge-ig', icon: '📷', color: '#e1306c' },
-  linkedin: { name: 'LinkedIn', maxChars: 3000, style: 'professional but personal. Start with a bold opening line that stops scrolling. Share a genuine insight or lesson. Use short paragraphs. Connect to leadership, resilience, or community impact. End with a thoughtful question or CTA.', badge: 'badge-li', icon: '💼', color: '#0a66c2' },
-  twitter: { name: 'X / Twitter', maxChars: 280, style: 'extremely concise — under 280 characters total. One powerful idea. Punchy. Can include 1-2 hashtags.', badge: 'badge-tw', icon: '𝕏', color: '#1da1f2' },
-  youtube: { name: 'YouTube', maxChars: 5000, style: 'a community post for the YouTube Community tab. Engaging, warm, encourage comments and engagement. Medium length (1-2 paragraphs).', badge: 'badge-yt', icon: '▶️', color: '#ff0000' },
-};
+function selectOption(chip, type, value) {
+  // Remove active from siblings
+  chip.parentElement.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  
+  if (type === 'tone') selectedTone = value;
+  if (type === 'hashtags') selectedHashtags = value;
+}
 
-const TONE_PROMPTS = {
-  authentic: 'Write in an authentic, genuine voice — no fluff, no marketing speak. Real talk.',
-  motivational: 'Write with energy and motivation. Inspire action. Make people feel like they can do hard things.',
-  raw: 'Write in a raw, honest voice. Acknowledge struggle. No sugar-coating. This is real.',
-  celebratory: 'Write with celebration and joy. Honor the people and the moment. Make them feel seen.',
-  urgent: 'Write with urgency and a strong call to action. Make it clear why now matters.',
-  story: 'Write in a storytelling style. Pull the reader in with narrative. Show, don\'t tell.',
-};
+function markStepComplete(stepNum) {
+  const step = document.getElementById(`step-${stepNum}`);
+  step.classList.add('completed');
+  
+  // Activate next step
+  const nextStep = document.getElementById(`step-${stepNum + 1}`);
+  if (nextStep) {
+    nextStep.classList.add('active');
+  }
+  
+  // Activate next section
+  const nextSection = document.getElementById(`section-${stepNum + 1}`);
+  if (nextSection) {
+    nextSection.classList.add('active');
+  }
+}
 
-const IAR_CONTEXT = `I Am Redemption (IAR) is a 501(c)(3) nonprofit founded by Army combat veteran and ultra runner Shawn Livingston. IAR is a recovery and redemption community built around movement, accountability, and showing up — for yourself and others. The tagline is "Built Different By Pain. Powered Different By Purpose." The community runs together, supports each other, and believes everyone is recovering from something. The documentary "100 Miles to Redemption" follows Shawn's story and is on Prime Video and Tubi. Website: iamredemption.com`;
-
+// ══════════════════════════════════════════════════════════════════════════════
+//  GENERATE POSTS
+// ══════════════════════════════════════════════════════════════════════════════
 async function generatePosts() {
-  if (!getApiKey()) {
-    showToast('Add your Anthropic API key in ⚙ Setup first', 'error');
-    switchTab('setup', document.querySelector('.rtab:last-child'));
+  const content = document.getElementById('content-input').value.trim();
+  
+  // Validation with helpful messages
+  if (!content) {
+    showToast('⚠️ Tell me what to post about first! Use a template or write your own idea.', 'error');
+    document.getElementById('content-input').focus();
     return;
   }
-  const rawContent = document.getElementById('raw-content').value.trim();
-  if (!rawContent) { showToast('Tell the AI what the post is about first', 'error'); return; }
-
-  const platforms = getActivePlatforms();
-  if (platforms.length === 0) { showToast('Select at least one platform', 'error'); return; }
-
-  const postType = document.getElementById('post-type').value;
-  const hashtagPref = document.getElementById('hashtag-pref').value;
-  const ctaText = document.getElementById('cta-text').value.trim();
-  const tonePrompt = TONE_PROMPTS[selectedTone];
-
-  // UI: loading state
+  
+  if (selectedPlatforms.length === 0) {
+    showToast('⚠️ Pick at least one platform (Facebook, Instagram, etc.)', 'error');
+    document.querySelector('.platform-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  
+  // Check for API key
+  const apiKey = localStorage.getItem('anthropic_api_key');
+  if (!apiKey || !apiKey.startsWith('sk-ant-')) {
+    showToast('⚠️ Need to add your API key first. Check the setup instructions below.', 'error');
+    showApiKeySetup();
+    return;
+  }
+  
+  // UI: Loading state
   const btn = document.getElementById('generate-btn');
   btn.disabled = true;
-  document.getElementById('btn-spinner').style.display = 'block';
+  document.getElementById('spinner').style.display = 'block';
   document.getElementById('btn-icon').style.display = 'none';
-  document.getElementById('btn-text').textContent = 'GENERATING...';
-  document.getElementById('empty-state').style.display = 'none';
-  document.getElementById('posts-container').innerHTML = '';
-
-  // Build platform specs
-  const platformSpecs = platforms.map(p => {
-    const rules = PLATFORM_RULES[p];
-    return `
-**${rules.name}:**
-- Style: ${rules.style}
-- Max characters: ${rules.maxChars}
-- Hashtags: ${hashtagPref === 'no' ? 'None' : hashtagPref === 'minimal' ? '3-5 max' : 'Include relevant hashtags'}
-${ctaText ? `- CTA to include: ${ctaText}` : ''}`;
+  document.getElementById('btn-text').textContent = 'CREATING YOUR POSTS...';
+  
+  // Build prompt
+  const platformList = selectedPlatforms.map(p => {
+    const config = PLATFORMS[p];
+    return `**${config.name}** (${config.maxChars} char max): ${config.style}`;
   }).join('\n');
-
-  const prompt = `You are a social media manager for I Am Redemption (IAR), a veteran-founded nonprofit recovery community.
+  
+  const toneMap = {
+    motivational: 'Inspiring, energetic, and uplifting. Rally people to take action.',
+    casual: 'Friendly, approachable, and conversational. Like talking to a friend.',
+    professional: 'Polished, credible, and mission-focused. Suitable for partners and donors.',
+    direct: 'Bold, straightforward, and no-nonsense. Challenge people to step up.'
+  };
+  
+  const hashtagMap = {
+    yes: 'Include 5-8 relevant hashtags',
+    minimal: 'Include only 3-5 highly targeted hashtags',
+    no: 'No hashtags'
+  };
+  
+  const prompt = `You are writing social media posts for I Am Redemption (IAR).
 
 ABOUT IAR:
 ${IAR_CONTEXT}
 
-POST TYPE: ${postType}
-TONE DIRECTION: ${tonePrompt}
+INSTRUCTIONS:
+Create ${selectedPlatforms.length} social media post${selectedPlatforms.length > 1 ? 's' : ''} about this topic:
 
-WHAT TO POST ABOUT:
-${rawContent}
+"${content}"
 
-Write optimized social media posts for the following platforms. For EACH platform, write a post that follows the platform's specific rules. Return ONLY a JSON object with platform names as keys and post text as values. No markdown, no explanation — just the JSON.
+TONE: ${toneMap[selectedTone]}
+HASHTAGS: ${hashtagMap[selectedHashtags]}
 
-Platform requirements:
-${platformSpecs}
+PLATFORMS TO WRITE FOR:
+${platformList}
 
-Required JSON format:
+Return ONLY a JSON object with platform names as keys and post text as values. No markdown formatting, no extra explanation.
+
+Example format:
 {
-${platforms.map(p => `  "${p}": "post text here"`).join(',\n')}
+  "facebook": "post text here",
+  "instagram": "post text here"
 }`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': getApiKey(), 'anthropic-version': '2023-06-01' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
-
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || 'API request failed');
+    }
+    
     const data = await response.json();
     const text = data.content?.[0]?.text || '';
-
-    // Parse JSON from response
+    
+    // Parse JSON
     let posts = {};
     try {
       const clean = text.replace(/```json|```/g, '').trim();
       posts = JSON.parse(clean);
     } catch(e) {
-      // Try extracting JSON with regex
       const match = text.match(/\{[\s\S]*\}/);
-      if (match) posts = JSON.parse(match[0]);
-      else throw new Error('Could not parse response');
+      if (match) {
+        posts = JSON.parse(match[0]);
+      } else {
+        throw new Error('Could not parse AI response');
+      }
     }
-
+    
     generatedPosts = posts;
-    renderPosts(posts, platforms);
-    document.getElementById('copy-all-bar').style.display = 'block';
-
-    // Save to history
-    const historyEntry = {
-      date: new Date().toISOString(),
-      platforms,
-      topic: rawContent.substring(0, 80) + (rawContent.length > 80 ? '...' : ''),
-      posts
-    };
-    postHistory.unshift(historyEntry);
-    if (postHistory.length > 50) postHistory.pop();
-    localStorage.setItem('iar_post_history', JSON.stringify(postHistory));
-    renderHistory();
-
-    showToast('Posts generated ✓', 'success');
-
+    renderPosts(posts);
+    markStepComplete(3);
+    
+    showToast(`🎉 ${Object.keys(posts).length} post${Object.keys(posts).length > 1 ? 's' : ''} created! Edit them below.`, 'success');
+    
   } catch(err) {
-    console.error(err);
-    document.getElementById('empty-state').style.display = 'flex';
-    showToast('Generation failed — check console', 'error');
+    console.error('Generation error:', err);
+    showToast(`❌ ${err.message || 'Failed to generate posts'}`, 'error');
   } finally {
     btn.disabled = false;
-    document.getElementById('btn-spinner').style.display = 'none';
+    document.getElementById('spinner').style.display = 'none';
     document.getElementById('btn-icon').style.display = 'inline';
     document.getElementById('btn-text').textContent = 'GENERATE POSTS WITH AI';
   }
 }
 
-// ══════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════
 //  RENDER POSTS
-// ══════════════════════════════════════════
-function hasTokenCheck(platform) {
-  var token = localStorage.getItem(platform.substring(0,2)+'_token') ||
-              localStorage.getItem(platform==='facebook'?'fb_token':
-                platform==='instagram'?'ig_token':
-                platform==='linkedin'?'li_token':
-                platform==='twitter'?'tw_token':'yt_token');
-  if (token) {
-    publishPost(platform);
-  } else {
-    switchTab('setup', document.querySelector('.rtab:last-child'));
-  }
-}
-
-function renderPosts(posts, platforms) {
-  var container = document.getElementById('posts-container');
+// ══════════════════════════════════════════════════════════════════════════════
+function renderPosts(posts) {
+  const container = document.getElementById('results-body');
   container.innerHTML = '';
-
-  platforms.forEach(function(platform) {
-    var text = posts[platform] || '';
-    var rules = PLATFORM_RULES[platform];
-    var charCount = text.length;
-    var isOverLimit = charCount > rules.maxChars;
-
-    var card = document.createElement('div');
-    card.className = 'post-card review-mode';
-    card.id = 'card-' + platform;
-    card.dataset.platform = platform;
-    card.dataset.saved = 'false';
-
-    // ── Header ──
-    var header = document.createElement('div');
-    header.className = 'post-card-header';
-    var badge = document.createElement('div');
-    badge.className = 'platform-badge ' + rules.badge;
-    badge.textContent = rules.icon;
-    var nameEl = document.createElement('div');
-    nameEl.className = 'post-platform-name';
-    nameEl.textContent = rules.name;
-    var countEl = document.createElement('div');
-    countEl.className = 'post-char-count';
-    countEl.id = 'count-' + platform;
-    countEl.style.color = isOverLimit ? 'var(--red)' : 'var(--gray)';
-    countEl.textContent = charCount + ' / ' + (rules.maxChars > 1000 ? Math.round(rules.maxChars/1000) + 'K' : rules.maxChars);
-    header.appendChild(badge);
-    header.appendChild(nameEl);
-    header.appendChild(countEl);
-
-    // ── Body (read-only textarea in review mode) ──
-    var body = document.createElement('div');
-    body.className = 'post-body';
-    var ta = document.createElement('textarea');
-    ta.className = 'post-text';
-    ta.id = 'text-' + platform;
-    ta.value = text;
-    ta.readOnly = true;
-    ta.addEventListener('input', function() { updateCharCount(platform, rules.maxChars); });
-    body.appendChild(ta);
-
-    // ── Review Bar: Save / Edit / Delete ──
-    var reviewBar = document.createElement('div');
-    reviewBar.className = 'review-bar';
-    reviewBar.id = 'review-bar-' + platform;
-
-    var reviewLabel = document.createElement('span');
-    reviewLabel.className = 'review-label';
-    reviewLabel.textContent = '✦ Review this post';
-
-    var saveBtn = document.createElement('button');
-    saveBtn.className = 'btn-save';
-    saveBtn.textContent = '✓ Save';
-    saveBtn.addEventListener('click', function() { savePost(platform); });
-
-    var editBtn = document.createElement('button');
-    editBtn.className = 'btn-edit';
-    editBtn.textContent = '✎ Edit';
-    editBtn.addEventListener('click', function() { editPost(platform); });
-
-    var delBtn = document.createElement('button');
-    delBtn.className = 'btn-delete';
-    delBtn.textContent = '✕ Delete';
-    delBtn.addEventListener('click', function() { deletePost(platform); });
-
-    reviewBar.appendChild(reviewLabel);
-    reviewBar.appendChild(saveBtn);
-    reviewBar.appendChild(editBtn);
-    reviewBar.appendChild(delBtn);
-
-    // ── Action Bar (shown after Save) ──
-    var actionBar = document.createElement('div');
-    actionBar.className = 'post-footer';
-    actionBar.id = 'action-bar-' + platform;
-    actionBar.style.display = 'none';
-
-    var copyBtn = document.createElement('button');
-    copyBtn.className = 'post-action-btn';
-    copyBtn.textContent = '📋 Copy';
-    copyBtn.addEventListener('click', function() { copyPost(platform); });
-
-    var rewriteBtn = document.createElement('button');
-    rewriteBtn.className = 'post-action-btn';
-    rewriteBtn.textContent = '↺ Rewrite';
-    rewriteBtn.addEventListener('click', function() { regenerateSingle(platform); });
-
-    var hasToken = !!localStorage.getItem('fb_token') && platform === 'facebook' ||
-                   !!localStorage.getItem('ig_token') && platform === 'instagram' ||
-                   !!localStorage.getItem('li_token') && platform === 'linkedin' ||
-                   !!localStorage.getItem('tw_token') && platform === 'twitter' ||
-                   !!localStorage.getItem('yt_token') && platform === 'youtube';
-
-    var pubBtn = document.createElement('button');
-    pubBtn.className = 'post-publish-btn' + (hasToken ? '' : ' needs-setup');
-    pubBtn.id = 'pub-' + platform;
-    pubBtn.textContent = hasToken ? '▶ Publish' : '⚙ Connect API';
-    pubBtn.addEventListener('click', function() { hasTokenCheck(platform); });
-
-    actionBar.appendChild(copyBtn);
-    actionBar.appendChild(rewriteBtn);
-    actionBar.appendChild(pubBtn);
-
-    card.appendChild(header);
-    card.appendChild(body);
-    card.appendChild(reviewBar);
-    card.appendChild(actionBar);
+  
+  document.getElementById('results-count').textContent = `${Object.keys(posts).length} post${Object.keys(posts).length > 1 ? 's' : ''} ready to use`;
+  
+  Object.entries(posts).forEach(([platform, text]) => {
+    const config = PLATFORMS[platform];
+    const charCount = text.length;
+    const charStatus = charCount > config.maxChars ? 'over' : charCount > config.maxChars * 0.9 ? 'warn' : 'ok';
+    
+    const card = document.createElement('div');
+    card.className = 'post-card';
+    card.innerHTML = `
+      <div class="post-header">
+        <div class="post-platform">
+          <span class="post-platform-icon">${config.icon}</span>
+          <span class="post-platform-name">${config.name}</span>
+        </div>
+        <div class="post-char-count ${charStatus}">${charCount} / ${config.maxChars}</div>
+      </div>
+      <div class="post-body">
+        <textarea class="post-text" oninput="updatePostCharCount(this, '${platform}')">${text}</textarea>
+      </div>
+      <div class="post-footer">
+        <button class="post-btn" onclick="copyPost('${platform}')">📋 Copy</button>
+        <button class="post-btn primary" onclick="downloadPost('${platform}')">💾 Download</button>
+      </div>
+    `;
     container.appendChild(card);
   });
+  
+  // Scroll to results
+  setTimeout(() => {
+    document.querySelector('.results-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
 }
 
-function savePost(platform) {
-  var card = document.getElementById('card-' + platform);
-  var ta = document.getElementById('text-' + platform);
-  var reviewBar = document.getElementById('review-bar-' + platform);
-  var actionBar = document.getElementById('action-bar-' + platform);
-
-  // Lock in the text, switch to saved state
-  ta.readOnly = true;
-  card.classList.remove('review-mode');
-  card.classList.add('saved-mode');
-  card.dataset.saved = 'true';
-
-  // Update review bar to show saved badge
-  reviewBar.innerHTML = '';
-  var savedBadge = document.createElement('span');
-  savedBadge.className = 'saved-badge';
-  savedBadge.textContent = '✓ Saved & Ready';
-  var unsaveBtn = document.createElement('button');
-  unsaveBtn.className = 'btn-edit';
-  unsaveBtn.textContent = '✎ Edit';
-  unsaveBtn.addEventListener('click', function() { editPost(platform); });
-  var delBtn2 = document.createElement('button');
-  delBtn2.className = 'btn-delete';
-  delBtn2.textContent = '✕ Delete';
-  delBtn2.addEventListener('click', function() { deletePost(platform); });
-  reviewBar.appendChild(savedBadge);
-  reviewBar.appendChild(unsaveBtn);
-  reviewBar.appendChild(delBtn2);
-
-  // Show the action bar with Copy / Rewrite / Publish
-  actionBar.style.display = 'flex';
-  showToast(platform.charAt(0).toUpperCase() + platform.slice(1) + ' post saved ✓', 'success');
+function updatePostCharCount(textarea, platform) {
+  const config = PLATFORMS[platform];
+  const charCount = textarea.value.length;
+  const charStatus = charCount > config.maxChars ? 'over' : charCount > config.maxChars * 0.9 ? 'warn' : 'ok';
+  
+  const counter = textarea.closest('.post-card').querySelector('.post-char-count');
+  counter.textContent = `${charCount} / ${config.maxChars}`;
+  counter.className = `post-char-count ${charStatus}`;
+  
+  generatedPosts[platform] = textarea.value;
 }
 
-function editPost(platform) {
-  var card = document.getElementById('card-' + platform);
-  var ta = document.getElementById('text-' + platform);
-  var reviewBar = document.getElementById('review-bar-' + platform);
-  var actionBar = document.getElementById('action-bar-' + platform);
-
-  // Unlock textarea for editing
-  ta.readOnly = false;
-  ta.focus();
-  card.classList.add('review-mode');
-  card.classList.remove('saved-mode');
-  card.dataset.saved = 'false';
-
-  // Restore Save/Edit/Delete bar
-  reviewBar.innerHTML = '';
-  var label = document.createElement('span');
-  label.className = 'review-label';
-  label.textContent = '✎ Editing — make your changes then save';
-
-  var saveBtn = document.createElement('button');
-  saveBtn.className = 'btn-save';
-  saveBtn.textContent = '✓ Save';
-  saveBtn.addEventListener('click', function() { savePost(platform); });
-
-  var cancelBtn = document.createElement('button');
-  cancelBtn.className = 'btn-edit';
-  cancelBtn.textContent = '✕ Cancel';
-  cancelBtn.addEventListener('click', function() {
-    ta.readOnly = true;
-    savePost(platform);
-  });
-
-  var delBtn = document.createElement('button');
-  delBtn.className = 'btn-delete';
-  delBtn.textContent = '✕ Delete';
-  delBtn.addEventListener('click', function() { deletePost(platform); });
-
-  reviewBar.appendChild(label);
-  reviewBar.appendChild(saveBtn);
-  reviewBar.appendChild(cancelBtn);
-  reviewBar.appendChild(delBtn);
-
-  // Hide action bar while editing
-  actionBar.style.display = 'none';
-}
-
-function deletePost(platform) {
-  var card = document.getElementById('card-' + platform);
-  if (card) {
-    card.style.opacity = '0';
-    card.style.transition = 'opacity 0.3s';
-    setTimeout(function() {
-      card.parentNode && card.parentNode.removeChild(card);
-      delete generatedPosts[platform];
-      showToast(platform.charAt(0).toUpperCase() + platform.slice(1) + ' post deleted', 'error');
-    }, 300);
-  }
-}
-
-function updateCharCount(platform, max) {
-  const text = document.getElementById('text-'+platform)?.value || '';
-  const card = document.getElementById('card-'+platform);
-  const counter = card?.querySelector('.post-char-count');
-  if (counter) {
-    counter.textContent = `${text.length} / ${max > 1000 ? Math.round(max/1000)+'K' : max}`;
-    counter.style.color = text.length > max ? 'var(--red)' : 'var(--gray)';
-  }
-}
-
+// ══════════════════════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════════════════════
 function copyPost(platform) {
-  const text = document.getElementById('text-'+platform)?.value;
-  if (text) {
-    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard ✓', 'success'));
-  }
-}
-
-async function regenerateSingle(platform) {
-  const rawContent = document.getElementById('raw-content').value.trim();
-  if (!rawContent) { showToast('Add content description first', 'error'); return; }
-  const rules = PLATFORM_RULES[platform];
-  const tonePrompt = TONE_PROMPTS[selectedTone];
-  const btn = document.querySelector(`#card-${platform} .post-action-btn:nth-child(2)`);
-  if (btn) { btn.textContent = '...'; btn.disabled = true; }
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': getApiKey(), 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: `${IAR_CONTEXT}\n\nWrite ONE ${rules.name} post about: ${rawContent}\n\nStyle: ${rules.style}\nTone: ${tonePrompt}\nMax chars: ${rules.maxChars}\n\nReturn ONLY the post text, nothing else.` }]
-      })
-    });
-    const data = await response.json();
-    const text = data.content?.[0]?.text?.trim() || '';
-    const textarea = document.getElementById('text-'+platform);
-    if (textarea) {
-      textarea.value = text;
-      updateCharCount(platform, rules.maxChars);
-    }
-    showToast(`${rules.name} post rewritten ✓`, 'success');
-  } catch(e) {
-    showToast('Rewrite failed', 'error');
-  } finally {
-    if (btn) { btn.textContent = '↺ Rewrite'; btn.disabled = false; }
-  }
-}
-
-// ══════════════════════════════════════════
-//  PUBLISH (real API calls)
-// ══════════════════════════════════════════
-async function publishPost(platform) {
-  const text = document.getElementById('text-'+platform)?.value?.trim();
-  if (!text) { showToast('Post text is empty', 'error'); return; }
-
-  const btn = document.getElementById('pub-'+platform);
-  btn.textContent = 'Posting...';
-  btn.disabled = true;
-
-  try {
-    let success = false;
-
-    if (platform === 'facebook') {
-      const token = localStorage.getItem('fb_token');
-      const pageId = localStorage.getItem('fb_page_id');
-      const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, access_token: token })
-      });
-      const data = await res.json();
-      success = !!data.id;
-      if (!success) throw new Error(data.error?.message || 'Facebook post failed');
-    }
-
-    else if (platform === 'instagram') {
-      const token = localStorage.getItem('ig_token');
-      const igId = localStorage.getItem('ig_account_id');
-      // Step 1: create container
-      const r1 = await fetch(`https://graph.facebook.com/v19.0/${igId}/media`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ caption: text, media_type: 'TEXT', access_token: token })
-      });
-      const d1 = await r1.json();
-      if (!d1.id) throw new Error(d1.error?.message || 'IG container failed');
-      // Step 2: publish
-      const r2 = await fetch(`https://graph.facebook.com/v19.0/${igId}/media_publish`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ creation_id: d1.id, access_token: token })
-      });
-      const d2 = await r2.json();
-      success = !!d2.id;
-      if (!success) throw new Error(d2.error?.message || 'IG publish failed');
-    }
-
-    else if (platform === 'linkedin') {
-      const token = localStorage.getItem('li_token');
-      const orgId = localStorage.getItem('li_org_id');
-      const res = await fetch('https://api.linkedin.com/v2/ugcPosts', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'X-Restli-Protocol-Version': '2.0.0' },
-        body: JSON.stringify({
-          author: orgId,
-          lifecycleState: 'PUBLISHED',
-          specificContent: { 'com.linkedin.ugc.ShareContent': { shareCommentary: { text }, shareMediaCategory: 'NONE' } },
-          visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' }
-        })
-      });
-      success = res.ok;
-      if (!success) { const err = await res.json(); throw new Error(err.message || 'LinkedIn post failed'); }
-    }
-
-    else if (platform === 'twitter') {
-      const token = localStorage.getItem('tw_token');
-      const res = await fetch('https://api.twitter.com/2/tweets', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-      const data = await res.json();
-      success = !!data.data?.id;
-      if (!success) throw new Error(data.title || 'X post failed');
-    }
-
-    else if (platform === 'youtube') {
-      showToast('YouTube community posts require OAuth — copy & paste manually for now', 'error');
-      btn.textContent = '▶ Publish'; btn.disabled = false; return;
-    }
-
-    if (success) {
-      btn.textContent = '✓ Published';
-      btn.className = 'post-publish-btn published';
-      showToast(`Posted to ${PLATFORM_RULES[platform].name} ✓`, 'success');
-    }
-
-  } catch(err) {
-    console.error(err);
-    btn.textContent = '▶ Publish'; btn.disabled = false;
-    showToast(err.message || 'Publish failed', 'error');
-  }
-}
-
-// ══════════════════════════════════════════
-//  HISTORY
-// ══════════════════════════════════════════
-const PLATFORM_COLORS = { facebook:'#1877f2', instagram:'#e1306c', linkedin:'#0a66c2', twitter:'#1da1f2', youtube:'#ff0000' };
-
-function renderHistory() {
-  const container = document.getElementById('history-container');
-  if (!postHistory.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">No History Yet</div><div class="empty-sub">Posts you generate will appear here.</div></div>`;
-    return;
-  }
-  var fragment = document.createDocumentFragment();
-  postHistory.slice(0, 20).forEach(function(entry) {
-    var item = document.createElement('div');
-    item.className = 'history-item';
-
-    var meta = document.createElement('div');
-    meta.className = 'history-meta';
-
-    var dateEl = document.createElement('div');
-    dateEl.className = 'history-date';
-    dateEl.textContent = new Date(entry.date).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-
-    var plats = document.createElement('div');
-    plats.className = 'history-platforms';
-    entry.platforms.forEach(function(p) {
-      var dot = document.createElement('div');
-      dot.className = 'history-platform-dot';
-      dot.style.background = PLATFORM_COLORS[p] || '#888';
-      dot.title = p;
-      plats.appendChild(dot);
-    });
-
-    meta.appendChild(dateEl);
-    meta.appendChild(plats);
-
-    var textEl = document.createElement('div');
-    textEl.className = 'history-text';
-    textEl.textContent = entry.topic;
-
-    item.appendChild(meta);
-    item.appendChild(textEl);
-    fragment.appendChild(item);
+  const text = generatedPosts[platform];
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`✓ ${PLATFORMS[platform].name} post copied!`, 'success');
   });
-  container.appendChild(fragment);
 }
 
-// ══════════════════════════════════════════
-//  COPY ALL
-// ══════════════════════════════════════════
-function copyAllPosts() {
-  const platforms = Object.keys(generatedPosts);
-  if (!platforms.length) { showToast('No posts to copy', 'error'); return; }
-  const allText = platforms.map(p => {
-    const rules = PLATFORM_RULES[p];
-    const text = document.getElementById('text-'+p)?.value || generatedPosts[p] || '';
-    return '═══ ' + rules.name.toUpperCase() + ' ═══\n' + text;
-  }).join('\n\n');
-  navigator.clipboard.writeText(allText).then(() => showToast('All posts copied ✓', 'success'));
+function downloadPost(platform) {
+  const text = generatedPosts[platform];
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `IAR_${platform}_post.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`✓ ${PLATFORMS[platform].name} post downloaded!`, 'success');
 }
 
-// ══════════════════════════════════════════
-//  UTILITIES
-// ══════════════════════════════════════════
-function getApiKey() {
-  return localStorage.getItem('anthropic_key') || '';
-}
-function saveApiKey() {
-  const key = document.getElementById('anthropic-key')?.value?.trim();
-  if (!key || !key.startsWith('sk-ant')) { showToast('Enter a valid Anthropic key (starts with sk-ant-)', 'error'); return; }
-  localStorage.setItem('anthropic_key', key);
-  document.getElementById('ai-status').textContent = 'Connected';
-  document.getElementById('ai-status').className = 'setup-status connected';
-  document.getElementById('api-dot').className = 'status-dot on';
-  document.getElementById('api-status-text').textContent = 'AI Ready';
-  showToast('API key saved ✓', 'success');
+// ══════════════════════════════════════════════════════════════════════════════
+//  TOAST NOTIFICATIONS
+// ══════════════════════════════════════════════════════════════════════════════
+function showToast(message, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = type;
+  toast.classList.add('show');
+  
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 4000);
 }
 
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// ══════════════════════════════════════════════════════════════════════════════
+//  API KEY SETUP
+// ══════════════════════════════════════════════════════════════════════════════
+function showApiKeySetup() {
+  const key = prompt(`To use this tool, you need an Anthropic API key.
+
+1. Go to: console.anthropic.com
+2. Sign up (it's free to start)
+3. Go to Settings → API Keys
+4. Create a new key
+5. Paste it here:
+
+Your key (starts with sk-ant-):`);
+  
+  if (key && key.startsWith('sk-ant-')) {
+    localStorage.setItem('anthropic_api_key', key);
+    showToast('✓ API key saved! You can now generate posts.', 'success');
+  } else if (key) {
+    showToast('❌ That doesn\'t look like a valid key. It should start with sk-ant-', 'error');
+  }
 }
 
-let toastTimer;
-function showToast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show ' + type;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.className = '', 3000);
-}
+// Check for API key on load
+window.addEventListener('load', () => {
+  const apiKey = localStorage.getItem('anthropic_api_key');
+  if (!apiKey) {
+    setTimeout(() => {
+      if (confirm('Welcome! To use the AI post generator, you need an Anthropic API key (free to start). Want to set it up now?')) {
+        showApiKeySetup();
+      }
+    }, 2000);
+  }
+});
 </script>
+
 </body>
 </html>
