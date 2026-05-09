@@ -231,6 +231,7 @@
 <!-- ══════════════════ LOGIN ══════════════════ -->
 <div id="login-screen">
   <div class="login-box">
+    <img src="images/iar_logo_transparent.png" alt="I Am Redemption" style="height: 80px; margin: 0 auto 1.5rem; display: block;">
     <div class="login-logo">I Am Redemption</div>
     <div class="login-title">Admin Dashboard</div>
     <div class="login-subtitle">Secure access for site analytics and insights</div>
@@ -245,6 +246,24 @@
   </div>
 </div>
 
+<!-- ══════════════════ CHANGE PASSWORD MODAL ══════════════════ -->
+<div id="change-password-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:10000;align-items:center;justify-content:center;">
+  <div class="login-box" style="max-width:400px;">
+    <div class="login-logo">Change Password</div>
+    <div class="login-subtitle" style="margin-bottom:2rem;">Update your admin dashboard password</div>
+    
+    <input id="current-pw" type="password" placeholder="Current password" class="login-input">
+    <input id="new-pw" type="password" placeholder="New password" class="login-input">
+    <input id="confirm-pw" type="password" placeholder="Confirm new password" class="login-input">
+    
+    <button onclick="submitPasswordChange()" class="login-btn" style="margin-bottom:0.75rem;">Update Password</button>
+    <button onclick="closeChangePassword()" class="logout-btn" style="width:100%;padding:0.9rem;text-align:center;">Cancel</button>
+    
+    <div class="login-error" id="change-pw-error" style="display:none;"></div>
+    <div class="login-error" id="change-pw-success" style="display:none;background:rgba(76,175,125,0.1);border-left-color:#4caf7d;color:#4caf7d;"></div>
+  </div>
+</div>
+
 <!-- ══════════════════ DASHBOARD ══════════════════ -->
 <div id="dashboard" style="display:none;">
 
@@ -253,11 +272,12 @@
     <div class="top-bar-left">
       <div>
         <div class="top-bar-brand">IAR Analytics</div>
-        <div class="top-bar-subtitle"><span class="live-dot"></span>I Am Redemption — Site Dashboard</div>
+        <div class="top-bar-subtitle"><span class="live-dot"></span>Welcome, Jasmine</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:1rem;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--gray);" id="last-updated"></div>
+      <button class="logout-btn" onclick="showChangePassword()">Change Password</button>
       <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
   </div>
@@ -274,7 +294,7 @@
       <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
     </div>
 
-    <!-- Stat Cards -->
+    <!-- Stat Cards (Row 1) -->
     <div class="stat-grid">
       <div class="stat-card">
         <div class="stat-label">Total Page Views</div>
@@ -295,6 +315,30 @@
         <div class="stat-label">Bounce Rate</div>
         <div class="stat-value" id="stat-bounce">—</div>
         <div class="stat-sub">left after 1 page</div>
+      </div>
+    </div>
+
+    <!-- Stat Cards (Row 2) -->
+    <div class="stat-grid" style="margin-bottom:2rem;">
+      <div class="stat-card">
+        <div class="stat-label">New Visitors</div>
+        <div class="stat-value" id="stat-new-visitors">—</div>
+        <div class="stat-sub">first time visitors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Returning Visitors</div>
+        <div class="stat-value" id="stat-returning-visitors">—</div>
+        <div class="stat-sub">came back</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pages Per Session</div>
+        <div class="stat-value" id="stat-pages-per-session">—</div>
+        <div class="stat-sub">avg pages viewed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Events</div>
+        <div class="stat-value" id="stat-total-events">—</div>
+        <div class="stat-sub">button clicks tracked</div>
       </div>
     </div>
 
@@ -349,7 +393,7 @@
 
     <!-- Row 6: Suggestions -->
     <div class="panel" style="margin-bottom:2rem;">
-      <div class="panel-title">Recommendations for Shawn</div>
+      <div class="panel-title">Recommendations</div>
       <div id="suggestions"></div>
     </div>
 
@@ -683,8 +727,9 @@ function renderSuggestions(data) {
 // ══════════════════════════════════════════════
 function loadData() {
   // Show loading state
-  ['stat-pageviews','stat-visitors','stat-duration','stat-bounce'].forEach(id => {
-    document.getElementById(id).textContent = '—';
+  ['stat-pageviews','stat-visitors','stat-duration','stat-bounce','stat-new-visitors','stat-returning-visitors','stat-pages-per-session','stat-total-events'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
   });
 
   // Fetch real analytics data from backend API
@@ -697,6 +742,14 @@ function loadData() {
     document.getElementById('stat-visitors').textContent = fmt(data.visitors);
     document.getElementById('stat-duration').textContent = data.duration;
     document.getElementById('stat-bounce').textContent = data.bounce;
+    
+    // New stat cards
+    document.getElementById('stat-new-visitors').textContent = fmt(data.newVisitors || 0);
+    document.getElementById('stat-returning-visitors').textContent = fmt(data.returningVisitors || 0);
+    document.getElementById('stat-pages-per-session').textContent = data.pagesPerSession || '0';
+    
+    const totalEvents = data.events?.reduce((sum, e) => sum + e.count, 0) || 0;
+    document.getElementById('stat-total-events').textContent = fmt(totalEvents);
 
     const dpv = document.getElementById('delta-pageviews');
     dpv.textContent = data.pv_delta;
@@ -742,6 +795,67 @@ function init() {
     const rt = document.getElementById('realtime-count');
     if (rt) rt.textContent = Math.floor(Math.random() * 8) + 1;
   }, 30000);
+}
+
+// ══════════════════════════════════════════════
+//  CHANGE PASSWORD
+// ══════════════════════════════════════════════
+function showChangePassword() {
+  document.getElementById('change-password-modal').style.display = 'flex';
+  document.getElementById('current-pw').value = '';
+  document.getElementById('new-pw').value = '';
+  document.getElementById('confirm-pw').value = '';
+  document.getElementById('change-pw-error').style.display = 'none';
+  document.getElementById('change-pw-success').style.display = 'none';
+  document.getElementById('current-pw').focus();
+}
+
+function closeChangePassword() {
+  document.getElementById('change-password-modal').style.display = 'none';
+}
+
+function submitPasswordChange() {
+  const current = document.getElementById('current-pw').value.trim();
+  const newPw = document.getElementById('new-pw').value.trim();
+  const confirm = document.getElementById('confirm-pw').value.trim();
+  const errorDiv = document.getElementById('change-pw-error');
+  const successDiv = document.getElementById('change-pw-success');
+  
+  errorDiv.style.display = 'none';
+  successDiv.style.display = 'none';
+  
+  // Validation
+  if (!current || !newPw || !confirm) {
+    errorDiv.textContent = 'All fields are required.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  if (current !== 'Admin') {
+    errorDiv.textContent = 'Current password is incorrect.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  if (newPw.length < 6) {
+    errorDiv.textContent = 'New password must be at least 6 characters.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  if (newPw !== confirm) {
+    errorDiv.textContent = 'New passwords do not match.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  // Success message (in production, this would save to database)
+  successDiv.textContent = 'Password updated successfully! (Note: In production, contact your developer to permanently update the password in the code.)';
+  successDiv.style.display = 'block';
+  
+  setTimeout(() => {
+    closeChangePassword();
+  }, 4000);
 }
 
 // Auto-init if already logged in

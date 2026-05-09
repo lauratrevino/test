@@ -7,6 +7,7 @@
   let sessionStart = Date.now();
   let maxScroll = 0;
   let tracked = new Set();
+  let sessionTracked = false;
 
   // Track pageview on load
   function trackPageview() {
@@ -50,6 +51,9 @@
 
   // Track session on exit
   function trackSession() {
+    if (sessionTracked) return;
+    sessionTracked = true;
+    
     const duration = Math.round((Date.now() - sessionStart) / 1000);
     
     const data = {
@@ -59,17 +63,34 @@
       page: window.location.pathname
     };
     
-    // Use sendBeacon if available (more reliable on page unload)
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(API_URL, JSON.stringify(data));
-    } else {
-      fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-        keepalive: true
-      }).catch(() => {});
-    }
+    // Use standard fetch with keepalive for better reliability
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      keepalive: true
+    }).catch(() => {});
+  }
+  
+  // Periodic session update (every 30 seconds while on page)
+  function updateSession() {
+    const duration = Math.round((Date.now() - sessionStart) / 1000);
+    
+    // Only send if user has been on page for at least 10 seconds
+    if (duration < 10) return;
+    
+    const data = {
+      type: 'session',
+      duration,
+      scroll: maxScroll,
+      page: window.location.pathname
+    };
+    
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(() => {});
   }
 
   // Initialize tracking
@@ -81,6 +102,9 @@
   // Session tracking on exit
   window.addEventListener('beforeunload', trackSession);
   window.addEventListener('pagehide', trackSession);
+  
+  // Periodic session updates (every 30 seconds)
+  setInterval(updateSession, 30000);
 
   // Auto-track common button clicks
   document.addEventListener('click', (e) => {

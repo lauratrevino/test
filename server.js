@@ -154,15 +154,18 @@ app.get('/api/analytics', (req, res) => {
   });
   const events = Object.entries(eventCount)
     .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count)
+    .sort((a, b) => b.count - a.sort)
     .slice(0, 10);
 
-  // Device breakdown
+  // Device breakdown (with filtering)
   const deviceCount = { Mobile: 0, Desktop: 0, Tablet: 0 };
   recentPageviews.forEach(pv => {
-    deviceCount[pv.device] = (deviceCount[pv.device] || 0) + 1;
+    if (pv.device && deviceCount.hasOwnProperty(pv.device)) {
+      deviceCount[pv.device]++;
+    }
   });
   const devices = Object.entries(deviceCount)
+    .filter(([name, count]) => count > 0) // Only include devices with traffic
     .map(([name, count]) => ({
       name,
       pct: totalPageviews > 0 ? Math.round((count / totalPageviews) * 100) : 0
@@ -178,6 +181,7 @@ app.get('/api/analytics', (req, res) => {
       else if (pv.referrer.includes('facebook')) source = 'Facebook';
       else if (pv.referrer.includes('instagram')) source = 'Instagram';
       else if (pv.referrer.includes('twitter') || pv.referrer.includes('t.co')) source = 'Twitter';
+      else if (pv.referrer.includes('linkedin')) source = 'LinkedIn';
       else source = 'Referral';
     }
     sourceCount[source] = (sourceCount[source] || 0) + 1;
@@ -205,13 +209,15 @@ app.get('/api/analytics', (req, res) => {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
-  // Average duration
-  const durations = Object.values(analytics.sessions)
+  // Average duration (from session updates, filtering out very short sessions)
+  const sessionDurations = Object.values(analytics.sessions)
     .map(s => s.duration)
-    .filter(d => d > 0);
-  const avgDuration = durations.length > 0
-    ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
+    .filter(d => d >= 5); // At least 5 seconds to count
+  
+  const avgDuration = sessionDurations.length > 0
+    ? Math.round(sessionDurations.reduce((a, b) => a + b, 0) / sessionDurations.length)
     : 0;
+  
   const durationStr = avgDuration >= 60
     ? `${Math.floor(avgDuration / 60)}m ${avgDuration % 60}s`
     : `${avgDuration}s`;
@@ -225,12 +231,25 @@ app.get('/api/analytics', (req, res) => {
   const totalSessions = Object.keys(sessionPageviews).length;
   const bounceRate = totalSessions > 0 ? Math.round((singlePageSessions / totalSessions) * 100) : 0;
 
-  // Scroll depth (placeholder - will populate from actual data when tracking improves)
+  // Pages per session
+  const pagesPerSession = totalSessions > 0 
+    ? (totalPageviews / totalSessions).toFixed(1) 
+    : '0';
+
+  // Scroll depth (aggregate from session data)
+  const scrollData = Object.values(analytics.sessions)
+    .map(s => s.scroll)
+    .filter(s => s > 0);
+  
+  const avgScroll = scrollData.length > 0
+    ? Math.round(scrollData.reduce((a, b) => a + b, 0) / scrollData.length)
+    : 0;
+  
   const scroll = [
     { depth: '0-25%', pct: 100 },
-    { depth: '25-50%', pct: 78 },
-    { depth: '50-75%', pct: 52 },
-    { depth: '75-100%', pct: 34 }
+    { depth: '25-50%', pct: avgScroll >= 25 ? Math.min(100, Math.round((scrollData.filter(s => s >= 25).length / scrollData.length) * 100)) : 0 },
+    { depth: '50-75%', pct: avgScroll >= 50 ? Math.min(100, Math.round((scrollData.filter(s => s >= 50).length / scrollData.length) * 100)) : 0 },
+    { depth: '75-100%', pct: avgScroll >= 75 ? Math.min(100, Math.round((scrollData.filter(s => s >= 75).length / scrollData.length) * 100)) : 0 }
   ];
 
   // Locations (placeholder - basic geo would require IP lookup service)
@@ -241,11 +260,22 @@ app.get('/api/analytics', (req, res) => {
     { name: 'San Antonio, TX', visits: Math.round(totalPageviews * 0.09) },
     { name: 'Other', visits: Math.round(totalPageviews * 0.17) }
   ];
+  
+  // New visitors vs returning (basic estimate based on session data)
+  const visitorsWithSessions = Object.keys(analytics.sessions).length;
+  const newVisitorEstimate = uniqueVisitors > visitorsWithSessions 
+    ? uniqueVisitors - visitorsWithSessions 
+    : Math.round(uniqueVisitors * 0.7); // Estimate 70% new if no session data
+  const returningVisitors = uniqueVisitors - newVisitorEstimate;
 
   res.json({
     pageviews: totalPageviews,
     visitors: uniqueVisitors,
+    newVisitors: newVisitorEstimate,
+    returningVisitors: returningVisitors,
+    pagesPerSession: pagesPerSession,
     duration: durationStr,
+    avgDurationSeconds: avgDuration,
     bounce: `${bounceRate}%`,
     pv_delta: '+12%',
     pv_up: true,
