@@ -33,6 +33,49 @@ function toggleMenu() {
   }
 }
 
+// ── reCAPTCHA v3 helper ──
+const RECAPTCHA_SITE_KEY = '6LdwX9wsAAAAK-McOkZTDRvuLgVXMYHh-hS0wim';
+
+// Cache of pre-fetched tokens keyed by action
+const _rcTokenCache = {};
+
+function _prefetchToken(action) {
+  if (typeof grecaptcha === 'undefined') return;
+  grecaptcha.ready(() => {
+    grecaptcha.execute(RECAPTCHA_SITE_KEY, { action })
+      .then(token => { _rcTokenCache[action] = token; })
+      .catch(() => {});
+  });
+}
+
+// Returns cached token instantly if available, otherwise fetches fresh with 3s timeout
+async function getRecaptchaToken(action) {
+  if (_rcTokenCache[action]) {
+    const token = _rcTokenCache[action];
+    delete _rcTokenCache[action];
+    return token;
+  }
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => resolve(''), 3000);
+    if (typeof grecaptcha === 'undefined') { clearTimeout(timeout); resolve(''); return; }
+    grecaptcha.ready(() => {
+      grecaptcha.execute(RECAPTCHA_SITE_KEY, { action })
+        .then(token => { clearTimeout(timeout); resolve(token); })
+        .catch(() => { clearTimeout(timeout); resolve(''); });
+    });
+  });
+}
+
+// Pre-fetch all tokens as soon as the page loads
+window.addEventListener('load', () => {
+  if (typeof grecaptcha === 'undefined') return;
+  grecaptcha.ready(() => {
+    _prefetchToken('email_subscribe');
+    _prefetchToken('submit_story');
+    _prefetchToken('submit_contact');
+  });
+});
+
 // ── EMAIL SUBSCRIBE (Formspree) ──
 async function submitEmailBar(suffix) {
   const input = document.getElementById('email-input-' + suffix);
@@ -44,9 +87,11 @@ async function submitEmailBar(suffix) {
   }
   if (btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
   try {
+    const token = await getRecaptchaToken('email_subscribe');
     const formData = new FormData();
     formData.append('email', input.value);
     formData.append('form_type', 'Email Subscription');
+    formData.append('recaptchaToken', token);
     const res = await fetch('https://formspree.io/f/mzdylgwk', { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } });
     if (res.ok) {
       if (input.parentElement) input.parentElement.style.display = 'none';
@@ -69,7 +114,9 @@ async function submitStoryFormspree(e) {
   const successDiv = document.getElementById('story-success');
   if (btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
   try {
+    const token = await getRecaptchaToken('submit_story');
     const data = new FormData(form);
+    data.append('recaptchaToken', token);
     const res = await fetch('https://formspree.io/f/mzdylgwk', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
     if (res.ok) {
       form.querySelectorAll('input:not([type=hidden]),textarea,select').forEach(el => el.value = '');
@@ -91,7 +138,9 @@ async function submitContactFormspree(e) {
   const successDiv = document.getElementById('contact-success');
   if (btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
   try {
+    const token = await getRecaptchaToken('submit_contact');
     const data = new FormData(form);
+    data.append('recaptchaToken', token);
     const res = await fetch('https://formspree.io/f/mzdylgwk', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
     if (res.ok) {
       form.querySelectorAll('input:not([type=hidden]),textarea,select').forEach(el => el.value = '');

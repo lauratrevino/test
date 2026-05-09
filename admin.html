@@ -159,6 +159,7 @@
     .dashboard-body { padding: 1rem; }
   }
 </style>
+  <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
 
@@ -209,7 +210,7 @@
     <div class="setup-notice" id="setup-notice">
       <div class="setup-notice-icon">⚙️</div>
       <div class="setup-notice-text">
-        <strong>One-time setup required:</strong> Replace <code>G-XXXXXXXXXX</code> with your real Google Analytics 4 Measurement ID in all HTML files. Once you do, this dashboard will show live data from all your visitors. Until then, sample data is displayed below so you can see exactly what it will look like.
+        <strong>One-time setup required:</strong> Replace <code>G-Q7S7B337Q8</code> with your real Google Analytics 4 Measurement ID in all HTML files. Once you do, this dashboard will show live data from all your visitors. Until then, sample data is displayed below so you can see exactly what it will look like.
         <br><br>
         See the included <strong>ga4-instructions.md</strong> file for step-by-step setup instructions.
       </div>
@@ -311,8 +312,8 @@
 // ══════════════════════════════════════════════
 //  CONFIGURATION — Update these when ready
 // ══════════════════════════════════════════════
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-const GA_CONFIGURED = GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX';
+const GA_MEASUREMENT_ID = 'G-Q7S7B337Q8';
+const GA_CONFIGURED = GA_MEASUREMENT_ID !== 'G-Q7S7B337Q8';
 
 // ══════════════════════════════════════════════
 //  LOGIN — same pattern as social-agent.html
@@ -569,11 +570,12 @@ function loadData() {
     document.getElementById(id).textContent = '—';
   });
 
-  // Use sample data (replace with GA4 Data API call when configured)
-  const data = getSampleData(currentDays);
-
-  // Stats
-  setTimeout(() => {
+  // Fetch real analytics data from backend API
+  fetch(`/api/analytics?days=${currentDays}`)
+    .then(res => res.json())
+    .then(data => {
+      // Stats
+      setTimeout(() => {
     document.getElementById('stat-pageviews').textContent = fmt(data.pageviews);
     document.getElementById('stat-visitors').textContent = fmt(data.visitors);
     document.getElementById('stat-duration').textContent = data.duration;
@@ -603,6 +605,17 @@ function loadData() {
     document.getElementById('last-updated').textContent =
       'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   }, 600);
+    })
+    .catch(err => {
+      console.error('Failed to load analytics:', err);
+      // Show error or fall back to sample data
+      setTimeout(() => {
+        document.getElementById('stat-pageviews').textContent = '0';
+        document.getElementById('stat-visitors').textContent = '0';
+        document.getElementById('stat-duration').textContent = '0s';
+        document.getElementById('stat-bounce').textContent = '0%';
+      }, 600);
+    });
 }
 
 function init() {

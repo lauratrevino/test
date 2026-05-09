@@ -61,22 +61,39 @@
       visibility: visible !important;
     }
 
-    /* ── Mission image stack: desktop overlapping layout ── */
+    /* ── Mission image stack: matches text column height exactly ── */
+    .mission-images {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+    }
     .mission-img-stack {
       position: relative;
+      flex: 1;
+      height: 100%;
+      min-height: 0;
     }
     .mission-img-top {
-      width: 80%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 78%;
+      height: 56%;
       display: block;
-      border-top: 3px solid var(--gold);
-      margin-left: auto;
+      object-fit: cover;
+      object-position: center;
+      border-top: none;
     }
     .mission-img-bottom {
-      width: 80%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 78%;
+      height: 56%;
       display: block;
-      border-top: 3px solid var(--gold);
-      margin-right: auto;
-      margin-top: -3rem;
+      object-fit: cover;
+      object-position: center top;
+      border-top: none;
       box-shadow: 8px 8px 0 rgba(253,191,18,0.25);
     }
 
@@ -94,13 +111,16 @@
       }
       .mission-img-stack {
         position: static !important;
+        height: auto !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 1rem !important;
       }
       .mission-img-top,
       .mission-img-bottom {
+        position: static !important;
         width: 100% !important;
+        height: auto !important;
         display: block !important;
         margin: 0 !important;
         box-shadow: none !important;
@@ -108,38 +128,24 @@
       .mission-img-bottom {
         box-shadow: 4px 4px 0 rgba(253,191,18,0.25) !important;
       }
+      /* Prevent mission section from having excess top padding on mobile */
+      .mission-strip {
+        padding: 2.5rem 1.25rem !important;
+      }
     }
 
     /* ── Mobile nav: hide logo when menu is open so links are never covered ── */
     @media (max-width: 768px) {
-      #top-nav.nav-open .nav-logo-group {
-        display: none !important;
-      }
-      #top-nav.nav-open {
-        z-index: 9999 !important;
-        position: relative !important;
-      }
-      #top-nav.nav-open .nav-links {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        z-index: 9999 !important;
-        position: relative !important;
-      }
-      #top-nav.nav-open .nav-links li a {
-        display: block !important;
-        padding: 0.85rem 1.5rem !important;
-        font-size: 16px !important;
-      }
+      #top-nav.nav-open .nav-logo-group { display: none !important; }
     }
   </style>
-<!-- ── GOOGLE ANALYTICS 4 — Replace G-XXXXXXXXXX with your Measurement ID ── -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<!-- ── GOOGLE ANALYTICS 4 — Replace G-Q7S7B337Q8 with your Measurement ID ── -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7S7B337Q8"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
+  gtag('config', 'G-Q7S7B337Q8');
   // Track scroll depth
   var _scrolled={25:0,50:0,75:0,90:0};
   window.addEventListener('scroll',function(){
@@ -149,6 +155,43 @@
     });
   },{passive:true});
 </script>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <!-- SEO -->
+  <meta name="description" content="I Am Redemption is a 501(c)(3) nonprofit helping people recover, rebuild, and rise through community runs, peer support, and real stories of redemption. Founded by Army veteran Shawn Livingston.">
+  <meta name="keywords" content="I Am Redemption, IAR, iamredemption.org, Shawn Livingston, redemption, recovery, community runs, peer support, nonprofit, veteran">
+  <link rel="canonical" href="https://iamredemption.org/">
+  <meta property="og:title" content="I Am Redemption">
+  <meta property="og:description" content="Built different by pain. Powered different by purpose. A nonprofit community helping people recover and rise.">
+  <meta property="og:url" content="https://iamredemption.org/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://iamredemption.org/images/LOGO.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="I Am Redemption">
+  <meta name="twitter:description" content="Built different by pain. Powered different by purpose. A nonprofit community helping people recover and rise.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NonprofitOrganization",
+    "name": "I Am Redemption",
+    "alternateName": "IAR",
+    "url": "https://iamredemption.org",
+    "logo": "https://iamredemption.org/images/LOGO.png",
+    "description": "I Am Redemption is a 501(c)(3) nonprofit helping people recover, rebuild, and rise through community runs, peer support, and real stories of redemption.",
+    "founder": {
+      "@type": "Person",
+      "name": "Shawn Livingston"
+    },
+    "nonprofitStatus": "Nonprofit501c3",
+    "email": "jasmine@iamredemption.org",
+    "sameAs": [
+      "https://open.spotify.com",
+      "https://podcasts.apple.com",
+      "https://www.iheart.com",
+      "https://www.podbean.com"
+    ]
+  }
+  </script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LdwX9wsAAAAK-McOkZTDRvuLgVXMYHh-hS0wim"></script>
 </head>
 <body>
 
@@ -307,7 +350,7 @@
 
 <!-- MISSION STRIP -->
 <section class="mission-strip" style="padding:3.5rem 2.5rem;">
-  <div class="mission-grid" style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;">
+  <div class="mission-grid" style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:stretch;">
     <div class="mission-text fade-in">
       <div class="section-label">Our Mission</div>
       <h2 class="section-title">Everyone is recovering<br>from something.</h2>
@@ -324,6 +367,21 @@
     </div>
   </div>
 </section>
+<script>
+(function() {
+  function matchMissionHeight() {
+    if (window.innerWidth <= 768) { var s = document.querySelector('.mission-img-stack'); if (s) s.style.height = ''; return; }
+    var textCol = document.querySelector('.mission-text');
+    var imgStack = document.querySelector('.mission-img-stack');
+    if (!textCol || !imgStack) return;
+    var h = textCol.getBoundingClientRect().height;
+    imgStack.style.height = h + 'px';
+  }
+  window.addEventListener('load', matchMissionHeight);
+  window.addEventListener('resize', matchMissionHeight);
+  if (document.readyState === 'complete') matchMissionHeight();
+})();
+</script>
 
 <!-- DOCUMENTARY TRAILER -->
 <section class="video-section">
@@ -386,9 +444,9 @@
       <h5>Navigate</h5>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="get-involved.html#partner">Where You Stand</a></li>
+        <li><a href="where-you-stand.html">Where You Stand</a></li>
         <li><a href="get-started.html">Get Started</a></li>
-        <li><a href="get-involved.html#partner">Get Involved</a></li>
+        <li><a href="get-involved.html">Get Involved</a></li>
         <li><a href="merch.html">Merch</a></li>
       </ul>
     </div>
@@ -423,5 +481,9 @@ function openTrailer() {
   window.open('https://www.imdb.com/video/vi2476917273/', '_blank');
 }
 </script>
+
+<!-- IAR Analytics -->
+<script src="iar-track.js"></script>
+
 </body>
 </html>
