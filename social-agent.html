@@ -1,1306 +1,2289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social Command Center | I Am Redemption</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --black: #080808;
-    --dark: #111;
-    --card: #161616;
-    --card2: #1c1c1c;
-    --border: rgba(253,191,18,0.12);
-    --border2: rgba(255,255,255,0.06);
-    --gold: #FDBF12;
-    --gold2: #fdd04a;
-    --gold-dim: rgba(253,191,18,0.08);
-    --gold-glow: rgba(253,191,18,0.15);
-    --white: #f0f0f0;
-    --gray: #777;
-    --gray2: #aaa;
-    --green: #4caf7d;
-    --red: #e05555;
-    --blue: #4a9eff;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Barlow', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Am Redemption - Social Command Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  /* ── WELCOME BANNER ── */
-  .welcome-banner {
-    background: linear-gradient(135deg, #1e2e10 0%, #0a0a0a 100%);
-    border-bottom: 3px solid var(--gold);
-    padding: 2rem 2.5rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .welcome-banner::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(253,191,18,0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .welcome-content { position: relative; z-index: 1; }
-  .welcome-greeting {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    letter-spacing: 0.06em;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .welcome-tagline {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 700;
-  }
-  .welcome-subtitle {
-    font-size: 14px;
-    color: var(--gray2);
-    margin-top: 0.5rem;
-    line-height: 1.6;
-  }
+        :root {
+            --iar-black: #000000;
+            --iar-gold: #FDBF12;
+            --iar-gold-dark: #c89612;
+            --iar-cream: #f0f0f0;
+            --shadow-gold: 0 8px 32px rgba(253, 191, 18, 0.4);
+        }
 
-  /* ── HELP TOOLTIP SYSTEM ── */
-  .help-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--gold-dim);
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    font-size: 11px;
-    font-weight: 700;
-    cursor: help;
-    margin-left: 6px;
-    position: relative;
-  }
-  .help-icon:hover::after {
-    content: attr(data-tip);
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% + 8px);
-    transform: translateX(-50%);
-    background: var(--card);
-    border: 1px solid var(--gold);
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--white);
-    white-space: nowrap;
-    max-width: 280px;
-    white-space: normal;
-    width: max-content;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  }
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            background: #000000;
+            color: var(--iar-cream);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-  /* ── STEP WIZARD ── */
-  .wizard {
-    background: var(--dark);
-    border-bottom: 1px solid var(--border);
-    padding: 1.5rem 2.5rem;
-  }
-  .wizard-steps {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    max-width: 900px;
-  }
-  .wizard-step {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex: 1;
-    position: relative;
-  }
-  .wizard-step::after {
-    content: '→';
-    position: absolute;
-    right: -1.5rem;
-    color: var(--gray);
-    font-size: 18px;
-  }
-  .wizard-step:last-child::after { display: none; }
-  .step-number {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--card);
-    border: 2px solid var(--border2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    color: var(--gray);
-    transition: all 0.3s;
-  }
-  .wizard-step.active .step-number {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: #000;
-    box-shadow: 0 0 12px var(--gold-glow);
-  }
-  .wizard-step.completed .step-number {
-    background: var(--green);
-    border-color: var(--green);
-    color: #fff;
-  }
-  .wizard-step.completed .step-number::before {
-    content: '✓';
-  }
-  .step-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gray);
-  }
-  .wizard-step.active .step-label {
-    color: var(--gold);
-  }
-  .wizard-step.completed .step-label {
-    color: var(--green);
-  }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-  /* ── MAIN GRID ── */
-  .main-container {
-    display: grid;
-    grid-template-columns: 1fr 500px;
-    min-height: calc(100vh - 280px);
-  }
+        .header {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 0.75rem 1.5rem 0.5rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.9);
+            position: relative;
+            border-bottom: 4px solid var(--iar-gold);
+            z-index: 100;
+        }
 
-  /* ── LEFT PANEL ── */
-  .compose-panel {
-    padding: 2.5rem;
-    overflow-y: auto;
-  }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--iar-gold) 20%, 
+                var(--iar-gold) 80%, 
+                transparent 100%);
+            box-shadow: 0 0 20px rgba(253, 191, 18, 0.8);
+        }
 
-  .panel-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border-radius: 4px;
-    position: relative;
-  }
-  .panel-section.active {
-    border-color: var(--gold);
-    box-shadow: 0 0 20px var(--gold-glow);
-  }
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-  }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 0.06em;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .section-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--gold);
-    color: #000;
-    font-size: 16px;
-  }
+        .logo-container {
+            margin-bottom: 0.35rem;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
 
-  /* ── QUICK START TEMPLATES ── */
-  .template-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .template-card {
-    background: var(--card2);
-    border: 1px solid var(--border2);
-    padding: 1.25rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 4px;
-  }
-  .template-card:hover {
-    border-color: var(--gold);
-    background: var(--gold-dim);
-    transform: translateY(-2px);
-  }
-  .template-icon {
-    font-size: 28px;
-    margin-bottom: 0.75rem;
-    display: block;
-  }
-  .template-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--white);
-    margin-bottom: 0.35rem;
-  }
-  .template-desc {
-    font-size: 12px;
-    color: var(--gray);
-    line-height: 1.5;
-  }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
 
-  /* ── FORM ELEMENTS ── */
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  .form-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gray2);
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.75rem;
-  }
-  .form-textarea {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 2px solid var(--border2);
-    color: var(--white);
-    padding: 1rem;
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    line-height: 1.7;
-    outline: none;
-    transition: all 0.2s;
-    resize: vertical;
-    min-height: 120px;
-    border-radius: 4px;
-  }
-  .form-textarea:focus {
-    border-color: var(--gold);
-    background: rgba(253,191,18,0.03);
-  }
-  .form-textarea::placeholder {
-    color: var(--gray);
-    font-style: italic;
-  }
-  .char-counter {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    color: var(--gray);
-    text-align: right;
-    margin-top: 0.5rem;
-  }
+        .logo {
+            max-width: 50px;
+            height: auto;
+            filter: drop-shadow(0 4px 12px rgba(253, 191, 18, 0.6));
+        }
 
-  /* ── PLATFORM SELECTOR ── */
-  .platform-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
-  }
-  .platform-card {
-    background: var(--card2);
-    border: 2px solid var(--border2);
-    padding: 1.25rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 4px;
-    position: relative;
-  }
-  .platform-card:hover {
-    border-color: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-  }
-  .platform-card.active {
-    border-color: var(--gold);
-    background: var(--gold-dim);
-  }
-  .platform-card.active::after {
-    content: '✓';
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--gold);
-    color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-  }
-  .platform-icon {
-    font-size: 32px;
-    display: block;
-    margin-bottom: 0.75rem;
-  }
-  .platform-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gray2);
-  }
-  .platform-card.active .platform-name {
-    color: var(--gold);
-  }
+        .header h1 {
+            color: var(--iar-gold);
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin-bottom: 0;
+            font-family: Georgia, serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 
+                0 0 40px rgba(253, 191, 18, 0.8),
+                0 0 20px rgba(253, 191, 18, 0.6),
+                0 2px 4px rgba(0,0,0,0.8);
+        }
 
-  /* ── OPTIONS ── */
-  .option-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .option-chip {
-    background: var(--card2);
-    border: 2px solid var(--border2);
-    color: var(--gray2);
-    padding: 0.5rem 1rem;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 20px;
-  }
-  .option-chip:hover {
-    border-color: rgba(255,255,255,0.3);
-    color: var(--white);
-  }
-  .option-chip.active {
-    border-color: var(--gold);
-    background: var(--gold);
-    color: #000;
-  }
+        .welcome-text {
+            color: #ffffff;
+            font-size: 1.35rem;
+            font-weight: bold;
+            margin-top: 0.75rem;
+            font-family: Georgia, serif;
+            letter-spacing: 1px;
+        }
 
-  /* ── BIG GENERATE BUTTON ── */
-  .generate-btn {
-    width: 100%;
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
-    color: #000;
-    border: none;
-    padding: 1.5rem;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 0.12em;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    border-radius: 4px;
-    box-shadow: 0 4px 20px rgba(253,191,18,0.3);
-    position: relative;
-    overflow: hidden;
-  }
-  .generate-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.5s;
-  }
-  .generate-btn:hover::before {
-    left: 100%;
-  }
-  .generate-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(253,191,18,0.5);
-  }
-  .generate-btn:disabled {
-    background: #333;
-    color: #666;
-    cursor: not-allowed;
-    transform: none;
-  }
-  .btn-icon {
-    font-size: 32px;
-  }
-  .spinner {
-    width: 28px;
-    height: 28px;
-    border: 3px solid rgba(0,0,0,0.3);
-    border-top-color: #000;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    display: none;
-  }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+        @keyframes textGlow {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 40px rgba(253, 191, 18, 0.7),
+                    0 0 20px rgba(253, 191, 18, 0.5),
+                    0 4px 8px rgba(0,0,0,0.8);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 80px rgba(253, 191, 18, 1),
+                    0 0 40px rgba(253, 191, 18, 0.8),
+                    0 0 20px rgba(253, 191, 18, 0.6),
+                    0 4px 8px rgba(0,0,0,0.8);
+            }
+        }
 
-  /* ── RIGHT PANEL: RESULTS ── */
-  .results-panel {
-    background: var(--dark);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-  }
-  .results-header {
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .results-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 0.06em;
-    margin-bottom: 0.5rem;
-  }
-  .results-count {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    color: var(--gray);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .results-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1.5rem;
-  }
+        .tabs {
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            gap: 0;
+            padding: 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+            border-bottom: 2px solid rgba(253, 191, 18, 0.3);
+            position: relative;
+            z-index: 90;
+        }
 
-  /* ── POST CARDS ── */
-  .post-card {
-    background: var(--card);
-    border: 1px solid var(--border2);
-    margin-bottom: 1.5rem;
-    border-radius: 4px;
-    overflow: hidden;
-    transition: all 0.2s;
-  }
-  .post-card:hover {
-    border-color: var(--gold);
-  }
-  .post-header {
-    padding: 1rem 1.25rem;
-    background: var(--card2);
-    border-bottom: 1px solid var(--border2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .post-platform {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .post-platform-icon {
-    font-size: 20px;
-  }
-  .post-platform-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .post-char-count {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    color: var(--gray);
-  }
-  .post-char-count.ok { color: var(--green); }
-  .post-char-count.warn { color: var(--gold); }
-  .post-char-count.over { color: var(--red); }
-  .post-body {
-    padding: 1.25rem;
-  }
-  .post-text {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: var(--white);
-    font-family: 'Barlow', sans-serif;
-    font-size: 13px;
-    line-height: 1.7;
-    resize: none;
-    outline: none;
-    min-height: 100px;
-  }
-  .post-footer {
-    padding: 1rem 1.25rem;
-    border-top: 1px solid var(--border2);
-    display: flex;
-    gap: 0.75rem;
-  }
-  .post-btn {
-    flex: 1;
-    background: var(--card2);
-    border: 1px solid var(--border2);
-    color: var(--gray2);
-    padding: 0.6rem 1rem;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 3px;
-  }
-  .post-btn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-  .post-btn.primary {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: #000;
-  }
-  .post-btn.primary:hover {
-    background: var(--gold2);
-  }
+        .tab {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 900;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            position: relative;
+        }
 
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding: 3rem 2rem;
-    text-align: center;
-  }
-  .empty-icon {
-    font-size: 64px;
-    margin-bottom: 1.5rem;
-    opacity: 0.2;
-  }
-  .empty-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    letter-spacing: 0.06em;
-    color: var(--gray);
-    margin-bottom: 1rem;
-  }
-  .empty-text {
-    font-size: 14px;
-    color: var(--gray);
-    line-height: 1.7;
-    max-width: 320px;
-  }
-  .empty-pointer {
-    margin-top: 2rem;
-    font-size: 48px;
-    opacity: 0.3;
-    animation: bounce 2s infinite;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(-10px); }
-  }
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                var(--iar-gold) 30%,
+                var(--iar-gold) 70%,
+                transparent 100%);
+            box-shadow: 0 0 15px rgba(253, 191, 18, 0.8);
+            transition: transform 0.3s ease;
+        }
 
-  /* ── TOAST NOTIFICATIONS ── */
-  #toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 9999;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--gold);
-    padding: 1rem 1.5rem;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--white);
-    transform: translateY(150px);
-    opacity: 0;
-    transition: all 0.4s;
-    border-radius: 4px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    max-width: 400px;
-  }
-  #toast.show {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  #toast.success { border-left-color: var(--green); }
-  #toast.error { border-left-color: var(--red); }
+        .tab:hover {
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            color: #ffffff;
+        }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 1200px) {
-    .main-container {
-      grid-template-columns: 1fr;
-    }
-    .results-panel {
-      border-left: none;
-      border-top: 1px solid var(--border);
-      min-height: 500px;
-    }
-  }
-</style>
+        .tab.active {
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .tab.active::before {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Calendar Styles */
+        .calendar-container {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 
+                0 12px 48px rgba(0,0,0,0.9),
+                0 0 0 1px rgba(253, 191, 18, 0.3),
+                inset 0 0 40px rgba(253, 191, 18, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, 
+                rgba(253, 191, 18, 0.1) 0%, 
+                transparent 60%);
+            pointer-events: none;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.35rem;
+            border-bottom: 2px solid var(--iar-gold);
+            position: relative;
+            z-index: 1;
+        }
+
+        .calendar-header h2 {
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-family: Georgia, serif;
+            letter-spacing: 1px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .calendar-nav button {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid var(--iar-gold);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .calendar-nav button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 24px rgba(253, 191, 18, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .calendar-nav button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .calendar-nav span {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+            min-width: 120px;
+            text-align: center;
+            font-family: Georgia, serif;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+            margin-top: 0.35rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 900;
+            color: #ffffff;
+            padding: 0.4rem 0.2rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #000000;
+            border: 1px solid var(--iar-gold);
+            border-radius: 6px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(253, 191, 18, 0.4);
+            border-radius: 6px;
+            padding: 0.2rem 0.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 
+                0 2px 12px rgba(0,0,0,0.6),
+                inset 0 0 15px rgba(253, 191, 18, 0.05);
+        }
+
+        .calendar-day::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, 
+                rgba(253, 191, 18, 0.15) 0%, 
+                transparent 70%);
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .calendar-day:hover::before {
+            opacity: 1;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--iar-gold);
+            border-width: 2px;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 12px 36px rgba(253, 191, 18, 0.6),
+                inset 0 0 25px rgba(253, 191, 18, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.15;
+            cursor: default;
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(100, 100, 100, 0.2);
+        }
+
+        .calendar-day.other-month:hover {
+            border-color: rgba(100, 100, 100, 0.2);
+            border-width: 2px;
+            transform: none;
+            box-shadow: 
+                0 2px 12px rgba(0,0,0,0.6),
+                inset 0 0 15px rgba(253, 191, 18, 0.05);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .calendar-day.other-month::before {
+            display: none;
+        }
+
+        .calendar-day.today {
+            border-color: var(--iar-gold);
+            border-width: 3px;
+            background: rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            box-shadow: 
+                0 8px 28px rgba(253, 191, 18, 0.8),
+                inset 0 0 25px rgba(253, 191, 18, 0.2);
+        }
+
+        .day-number {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.1rem;
+            text-shadow: 0 1px 6px rgba(0,0,0,1);
+        }
+
+        .day-posts {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-top: 0.25rem;
+            align-content: flex-start;
+        }
+
+        .post-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, 
+                var(--iar-gold) 0%, 
+                var(--iar-gold-dark) 100%);
+            box-shadow: 0 1px 6px rgba(253, 191, 18, 0.6);
+        }
+
+        .post-dot.recurring {
+            box-shadow: 0 0 12px rgba(253, 191, 18, 1);
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 12px rgba(253, 191, 18, 1);
+            }
+            50% { 
+                transform: scale(1.3);
+                box-shadow: 
+                    0 0 18px rgba(253, 191, 18, 1),
+                    0 0 10px rgba(253, 191, 18, 0.8);
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,1),
+                0 0 0 1px rgba(253, 191, 18, 0.4);
+            border: 1px solid rgba(253, 191, 18, 0.3);
+        }
+
+        .modal-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--iar-gold);
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            font-family: Georgia, serif;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: 2px solid var(--iar-gold);
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 20px rgba(253, 191, 18, 0.8);
+        }
+
+        .modal-body {
+            padding: 0.75rem;
+        }
+
+        .modal-section {
+            margin-bottom: 1rem;
+        }
+
+        .modal-section h4 {
+            color: var(--iar-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-family: Georgia, serif;
+        }
+
+        .tone-selector-modal {
+            width: 100%;
+        }
+
+        .tone-dropdown {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid rgba(253, 191, 18, 0.4);
+            border-radius: 6px;
+            background: #000000;
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+        }
+
+        .tone-dropdown:hover {
+            border-color: var(--iar-gold);
+            box-shadow: 0 0 20px rgba(253, 191, 18, 0.5);
+            background: #000000;
+        }
+
+        .tone-dropdown:focus {
+            outline: none;
+            border-color: var(--iar-gold);
+            box-shadow: 0 0 0 4px rgba(253, 191, 18, 0.2);
+            background: #000000;
+        }
+
+        .tone-dropdown option {
+            background: #000000;
+            color: #ffffff;
+            padding: 0.5rem;
+        }
+
+        .tone-dropdown option:checked {
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--iar-gold);
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .platform-option {
+            border: 2px solid rgba(253, 191, 18, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        }
+
+        .platform-option:hover {
+            border-color: var(--iar-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(253, 191, 18, 0.4);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .platform-option.selected {
+            border-color: var(--iar-gold);
+            border-width: 3px;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 16px rgba(253, 191, 18, 0.5);
+        }
+
+        .platform-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--iar-gold);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .platform-option.selected .platform-checkbox {
+            background: var(--iar-gold);
+            transform: scale(1.1);
+        }
+
+        .platform-option.selected .platform-checkbox::after {
+            content: '✓';
+            color: #000;
+            font-weight: 900;
+            font-size: 0.75rem;
+        }
+
+        .platform-icon {
+            font-size: 1.2rem;
+        }
+
+        .platform-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--iar-gold);
+        }
+
+        .recurrence-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .recurrence-option {
+            border: 2px solid rgba(253, 191, 18, 0.3);
+            border-radius: 6px;
+            padding: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .recurrence-option:hover {
+            border-color: var(--iar-gold);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .recurrence-option.selected {
+            border-color: var(--iar-gold);
+            border-width: 3px;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .radio-button {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--iar-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .recurrence-option.selected .radio-button::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--iar-gold);
+            border-radius: 50%;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .template-card {
+            border: 2px solid rgba(253, 191, 18, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .template-card:hover {
+            border-color: var(--iar-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(253, 191, 18, 0.4);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .template-card.selected {
+            border-color: var(--iar-gold);
+            border-width: 3px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .template-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .template-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--iar-gold);
+            margin-bottom: 0.35rem;
+        }
+
+        .template-description {
+            font-size: 0.7rem;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+
+        .preview-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(253, 191, 18, 0.3);
+            border-radius: 10px;
+            padding: 0.75rem;
+            min-height: 80px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            color: #ffffff;
+        }
+
+        .preview-box.generating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid var(--iar-gold);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(253, 191, 18, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid var(--iar-gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Stats & Tables */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            padding: 1.25rem;
+            box-shadow: 
+                0 8px 24px rgba(0,0,0,0.8),
+                0 0 0 1px rgba(253, 191, 18, 0.3);
+            border-left: 4px solid var(--iar-gold);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: transparent;
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 36px rgba(253, 191, 18, 0.4),
+                0 0 0 1px rgba(253, 191, 18, 0.5);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: var(--iar-gold);
+            font-family: Georgia, serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            color: #ffffff;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .filters-bar {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 
+                0 8px 24px rgba(0,0,0,0.8),
+                0 0 0 1px rgba(253, 191, 18, 0.3);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid rgba(253, 191, 18, 0.3);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #000000;
+            color: var(--iar-cream);
+            transition: all 0.3s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--iar-gold);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
+            background: #000000;
+        }
+
+        .filter-group select option {
+            background: #000000;
+            color: var(--iar-cream);
+        }
+
+        .filter-group select:hover {
+            background: #000000;
+            border-color: var(--iar-gold);
+        }
+
+        .posts-table {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            box-shadow: 
+                0 8px 24px rgba(0,0,0,0.8),
+                0 0 0 1px rgba(253, 191, 18, 0.3);
+            overflow: hidden;
+        }
+
+        .posts-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .posts-table th {
+            background: #000000;
+            color: #ffffff;
+            padding: 1rem 1rem;
+            text-align: left;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--iar-gold);
+        }
+
+        .posts-table td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid rgba(253, 191, 18, 0.1);
+            color: var(--iar-cream);
+            font-size: 0.9rem;
+        }
+
+        .posts-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .posts-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .posts-table tbody tr:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-success {
+            background: rgba(0, 0, 0, 0.6);
+            color: var(--iar-gold);
+            box-shadow: 0 2px 8px rgba(253, 191, 18, 0.4);
+        }
+
+        .status-pending {
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--iar-gold);
+            box-shadow: 0 2px 8px rgba(253, 191, 18, 0.3);
+        }
+
+        .status-failed {
+            background: rgba(150, 150, 150, 0.2);
+            color: #ccc;
+            box-shadow: 0 2px 8px rgba(100, 100, 100, 0.3);
+        }
+
+        .post-preview {
+            max-width: 350px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .platform-badge {
+            display: inline-block;
+            padding: 0.35rem 0.9rem;
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--iar-gold);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+            box-shadow: 0 2px 8px rgba(253, 191, 18, 0.3);
+            border: 1px solid rgba(253, 191, 18, 0.4);
+        }
+
+        /* Settings */
+        .settings-container {
+            max-width: 800px;
+        }
+
+        .settings-section {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 
+                0 8px 24px rgba(0,0,0,0.8),
+                0 0 0 1px rgba(253, 191, 18, 0.3);
+        }
+
+        .settings-section h3 {
+            color: var(--iar-gold);
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+            font-family: Georgia, serif;
+            border-bottom: 2px solid var(--iar-gold);
+            padding-bottom: 0.75rem;
+            text-shadow: 0 0 15px rgba(253, 191, 18, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            color: var(--iar-gold);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.85rem;
+            border: 2px solid rgba(253, 191, 18, 0.3);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #000000;
+            color: var(--iar-cream);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--iar-gold);
+            box-shadow: 0 0 0 3px rgba(253, 191, 18, 0.2);
+            background: #000000;
+        }
+
+        .form-group input:hover {
+            background: #000000;
+            border-color: var(--iar-gold);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            border: 1px solid rgba(253, 191, 18, 0.2);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-indicator.connected {
+            background: var(--iar-gold);
+            box-shadow: 0 0 10px rgba(253, 191, 18, 0.8);
+        }
+
+        .status-indicator.disconnected {
+            background: #555;
+        }
+
+        .help-text {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 1200px) {
+            .platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                gap: 0.5rem;
+            }
+
+            .calendar-day {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .day-number {
+                font-size: 1.3rem;
+            }
+
+            .platform-grid,
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-bar {
+                flex-direction: column;
+            }
+
+            .posts-table {
+                overflow-x: auto;
+            }
+
+            .tab {
+                font-size: 0.85rem;
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(253, 191, 18, 0.2);
+            border-top: 5px solid var(--iar-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-
-<!-- WELCOME BANNER -->
-<div class="welcome-banner">
-  <div class="welcome-content">
-    <div class="welcome-greeting">Hi Shawn! LET'S GO!!</div>
-    <div class="welcome-tagline">Social Command Center</div>
-    <div class="welcome-subtitle">
-      Create professional social media posts in 3 simple steps. AI does the heavy lifting — you just click and go.
-    </div>
-  </div>
-</div>
-
-<!-- STEP WIZARD -->
-<div class="wizard">
-  <div class="wizard-steps">
-    <div class="wizard-step active" id="step-1">
-      <div class="step-number">1</div>
-      <div class="step-label">What to post</div>
-    </div>
-    <div class="wizard-step" id="step-2">
-      <div class="step-number">2</div>
-      <div class="step-label">Pick platforms</div>
-    </div>
-    <div class="wizard-step" id="step-3">
-      <div class="step-number">3</div>
-      <div class="step-label">Generate & use</div>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN CONTAINER -->
-<div class="main-container">
-  
-  <!-- LEFT: COMPOSE PANEL -->
-  <div class="compose-panel">
-    
-    <!-- STEP 1: QUICK START TEMPLATES -->
-    <div class="panel-section active" id="section-1">
-      <div class="section-header">
-        <div class="section-title">
-          <span class="section-number">1</span>
-          Quick Start Templates
-          <span class="help-icon" data-tip="Click any template to auto-fill everything. You can edit it after!">?</span>
+    <div class="header">
+        <div class="logo-container">
+            <img src="https://static1.squarespace.com/static/673cb3ada2f9424ce3c2c026/t/673cb5ba2e5a7a4d1fe7c7a0/1732012474802/IAR_LOGO_Transparent+Yellow.png" alt="I Am Redemption" class="logo">
         </div>
-      </div>
-      
-      <div class="template-grid">
-        <div class="template-card" onclick="loadTemplate('motivation')">
-          <span class="template-icon">💪</span>
-          <div class="template-name">Monday Motivation</div>
-          <div class="template-desc">Inspiring message to start the week strong</div>
-        </div>
-        
-        <div class="template-card" onclick="loadTemplate('veteran')">
-          <span class="template-icon">🎖️</span>
-          <div class="template-name">Veteran Spotlight</div>
-          <div class="template-desc">Highlight a community member's story</div>
-        </div>
-        
-        <div class="template-card" onclick="loadTemplate('event')">
-          <span class="template-icon">📅</span>
-          <div class="template-name">Event Announcement</div>
-          <div class="template-desc">Promote a run, meeting, or gathering</div>
-        </div>
-        
-        <div class="template-card" onclick="loadTemplate('documentary')">
-          <span class="template-icon">🎬</span>
-          <div class="template-name">Watch the Documentary</div>
-          <div class="template-desc">Drive views to Prime Video or Tubi</div>
-        </div>
-        
-        <div class="template-card" onclick="loadTemplate('volunteer')">
-          <span class="template-icon">🤝</span>
-          <div class="template-name">Volunteer Recruitment</div>
-          <div class="template-desc">Get people involved in the mission</div>
-        </div>
-        
-        <div class="template-card" onclick="loadTemplate('custom')">
-          <span class="template-icon">✍️</span>
-          <div class="template-name">Write Your Own</div>
-          <div class="template-desc">Start from scratch with your own idea</div>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">
-          Or describe what you want to post about
-          <span class="help-icon" data-tip="Tell the AI what you want to say. Be specific! Example: 'Promote Saturday morning run at 6am, meet at Zilker Park'">?</span>
-        </label>
-        <textarea 
-          class="form-textarea" 
-          id="content-input" 
-          placeholder="Example: Promote our Saturday morning run at Zilker Park. 6am start, all fitness levels welcome. Mention we grab coffee after at Jo's."
-          oninput="updateCharCounter(this); markStepComplete(1);"
-        ></textarea>
-        <div class="char-counter" id="input-counter">0 characters</div>
-      </div>
+        <h1>I AM REDEMPTION</h1>
+        <div class="welcome-text">Welcome Shawn: Let's Go!!!!</div>
     </div>
 
-    <!-- STEP 2: PLATFORMS -->
-    <div class="panel-section" id="section-2">
-      <div class="section-header">
-        <div class="section-title">
-          <span class="section-number">2</span>
-          Where to Post
-          <span class="help-icon" data-tip="Click platforms you want posts for. Each platform gets a custom version optimized for that audience.">?</span>
-        </div>
-      </div>
-      
-      <div class="platform-grid">
-        <div class="platform-card" onclick="togglePlatform(this, 'facebook')">
-          <span class="platform-icon">📘</span>
-          <div class="platform-name">Facebook</div>
-        </div>
-        
-        <div class="platform-card" onclick="togglePlatform(this, 'instagram')">
-          <span class="platform-icon">📸</span>
-          <div class="platform-name">Instagram</div>
-        </div>
-        
-        <div class="platform-card" onclick="togglePlatform(this, 'linkedin')">
-          <span class="platform-icon">💼</span>
-          <div class="platform-name">LinkedIn</div>
-        </div>
-        
-        <div class="platform-card" onclick="togglePlatform(this, 'twitter')">
-          <span class="platform-icon">🐦</span>
-          <div class="platform-name">Twitter/X</div>
-        </div>
-      </div>
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('calendar')">
+            📅 Social Posting Calendar
+        </button>
+        <button class="tab" onclick="switchTab('published')">
+            📊 Published
+        </button>
+        <button class="tab" onclick="switchTab('statistics')">
+            📈 Statistics
+        </button>
+        <button class="tab" onclick="switchTab('settings')">
+            ⚙️ Settings
+        </button>
     </div>
 
-    <!-- STEP 3: OPTIONS -->
-    <div class="panel-section" id="section-3">
-      <div class="section-header">
-        <div class="section-title">
-          <span class="section-number">3</span>
-          Style & Tone
-          <span class="help-icon" data-tip="Pick how the post should sound. You can always edit it after!">?</span>
+    <!-- CALENDAR TAB -->
+    <div class="tab-content active" id="calendar-tab">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h2>Posting Calendar</h2>
+                <div class="calendar-nav">
+                    <button onclick="changeMonth(-1)">‹</button>
+                    <span id="current-month">May 2026</span>
+                    <button onclick="changeMonth(1)">›</button>
+                </div>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+            </div>
+            <div class="calendar-grid" id="calendar-days"></div>
         </div>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Tone</label>
-        <div class="option-chips">
-          <div class="option-chip active" onclick="selectOption(this, 'tone', 'motivational')">Motivational</div>
-          <div class="option-chip" onclick="selectOption(this, 'tone', 'casual')">Casual & Friendly</div>
-          <div class="option-chip" onclick="selectOption(this, 'tone', 'professional')">Professional</div>
-          <div class="option-chip" onclick="selectOption(this, 'tone', 'direct')">Direct & Bold</div>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Hashtags</label>
-        <div class="option-chips">
-          <div class="option-chip active" onclick="selectOption(this, 'hashtags', 'yes')">Include Hashtags</div>
-          <div class="option-chip" onclick="selectOption(this, 'hashtags', 'minimal')">Minimal (3-5)</div>
-          <div class="option-chip" onclick="selectOption(this, 'hashtags', 'no')">No Hashtags</div>
-        </div>
-      </div>
     </div>
 
-    <!-- GENERATE BUTTON -->
-    <button class="generate-btn" id="generate-btn" onclick="generatePosts()">
-      <div class="spinner" id="spinner"></div>
-      <span class="btn-icon" id="btn-icon">🚀</span>
-      <span id="btn-text">GENERATE POSTS WITH AI</span>
-    </button>
-
-  </div>
-
-  <!-- RIGHT: RESULTS PANEL -->
-  <div class="results-panel">
-    <div class="results-header">
-      <div class="results-title">Your Posts</div>
-      <div class="results-count" id="results-count">Click generate to create posts</div>
-    </div>
-    <div class="results-body" id="results-body">
-      <div class="empty-state">
-        <div class="empty-icon">📝</div>
-        <div class="empty-title">Nothing here yet</div>
-        <div class="empty-text">
-          Fill out the steps on the left, then click the big "Generate Posts" button. AI will create custom posts for each platform you selected.
+    <!-- PUBLISHED TAB -->
+    <div class="tab-content" id="published-tab">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Posts This Month</div>
+                <div class="stat-value">24</div>
+                <div class="stat-trend">↑ 35% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Most Popular</div>
+                <div class="stat-value">Facebook</div>
+                <div class="stat-trend">1,247 total engagements</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Engagement</div>
+                <div class="stat-value">1,847</div>
+                <div class="stat-trend">↑ 22% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg. Engagement Rate</div>
+                <div class="stat-value">8.4%</div>
+                <div class="stat-trend">↑ 1.2% improvement</div>
+            </div>
         </div>
-        <div class="empty-pointer">←</div>
-      </div>
-    </div>
-  </div>
 
-</div>
-
-<!-- TOAST -->
-<div id="toast"></div>
-
-<script>
-// ══════════════════════════════════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════════════════════════════════
-let selectedPlatforms = [];
-let selectedTone = 'motivational';
-let selectedHashtags = 'yes';
-let generatedPosts = {};
-
-// Platform config
-const PLATFORMS = {
-  facebook: { name: 'Facebook', icon: '📘', maxChars: 63206, style: 'Conversational and community-focused' },
-  instagram: { name: 'Instagram', icon: '📸', maxChars: 2200, style: 'Visual and inspiring with emojis' },
-  linkedin: { name: 'LinkedIn', icon: '💼', maxChars: 3000, style: 'Professional and mission-driven' },
-  twitter: { name: 'Twitter/X', icon: '🐦', maxChars: 280, style: 'Concise and punchy' }
-};
-
-// Templates
-const TEMPLATES = {
-  motivation: {
-    title: 'Monday Motivation',
-    content: 'Create an inspiring post about pushing through challenges and showing up even when it\'s hard. Reference the IAR community and how we support each other. Include a call to join us for a run or meeting.',
-    platforms: ['facebook', 'instagram'],
-    tone: 'motivational',
-    hashtags: 'yes'
-  },
-  veteran: {
-    title: 'Veteran Spotlight',
-    content: 'Highlight one of our community members who is making progress in their recovery journey. Talk about their strength, dedication, and how the IAR community has supported them. (You can fill in specific details about the veteran)',
-    platforms: ['facebook', 'instagram', 'linkedin'],
-    tone: 'motivational',
-    hashtags: 'minimal'
-  },
-  event: {
-    title: 'Event Announcement',
-    content: 'Promote our next community event - a group run or Monday night meeting. Include when and where we meet, and that all are welcome. Emphasize the brotherhood and community aspect.',
-    platforms: ['facebook', 'instagram'],
-    tone: 'casual',
-    hashtags: 'yes'
-  },
-  documentary: {
-    title: 'Watch the Documentary',
-    content: 'Encourage people to watch the I Am Redemption documentary on Prime Video or Tubi. Talk about how it shows real stories of transformation and recovery. Include a link or mention where to watch.',
-    platforms: ['facebook', 'instagram', 'linkedin'],
-    tone: 'direct',
-    hashtags: 'minimal'
-  },
-  volunteer: {
-    title: 'Volunteer Recruitment',
-    content: 'We need volunteers to help with upcoming events, mentoring, or administrative support. Explain how giving back helps both the community and the volunteer. Include how to get involved.',
-    platforms: ['facebook', 'linkedin'],
-    tone: 'professional',
-    hashtags: 'minimal'
-  },
-  custom: {
-    title: 'Custom Post',
-    content: '',
-    platforms: [],
-    tone: 'motivational',
-    hashtags: 'yes'
-  }
-};
-
-// IAR Context for AI
-const IAR_CONTEXT = `I Am Redemption (IAR) is a veteran-founded 501(c)(3) nonprofit recovery community based in Austin, Texas. Founded by Shawn Gant, IAR helps veterans and civilians recover from addiction, trauma, and life challenges through:
-
-- Community runs and fitness (Monday nights, Saturday mornings)
-- Peer support and brotherhood
-- The 5-phase transformation system
-- Weekly meetings and accountability
-- The IAR documentary (available on Prime Video and Tubi)
-
-Core values: Built Different. We don't just talk about change - we live it. Military discipline meets civilian recovery. No excuses, just action.
-
-Tone: Direct, authentic, motivating. We speak to people who are ready to do the work.`;
-
-// ══════════════════════════════════════════════════════════════════════════════
-//  TEMPLATE LOADING
-// ══════════════════════════════════════════════════════════════════════════════
-function loadTemplate(type) {
-  const template = TEMPLATES[type];
-  
-  document.getElementById('content-input').value = template.content;
-  updateCharCounter(document.getElementById('content-input'));
-  
-  // Auto-select platforms
-  selectedPlatforms = [];
-  document.querySelectorAll('.platform-card').forEach(card => card.classList.remove('active'));
-  
-  if (template.platforms.length > 0) {
-    template.platforms.forEach(platform => {
-      const card = document.querySelector(`[onclick*="${platform}"]`);
-      if (card) {
-        card.classList.add('active');
-        selectedPlatforms.push(platform);
-      }
-    });
-  }
-  
-  // Set tone
-  selectedTone = template.tone;
-  document.querySelectorAll('[onclick*="tone"]').forEach(chip => {
-    chip.classList.remove('active');
-    if (chip.textContent.toLowerCase().includes(template.tone)) {
-      chip.classList.add('active');
-    }
-  });
-  
-  // Set hashtags
-  selectedHashtags = template.hashtags;
-  document.querySelectorAll('[onclick*="hashtags"]').forEach(chip => {
-    chip.classList.remove('active');
-    if (chip.textContent.toLowerCase().includes(template.hashtags)) {
-      chip.classList.add('active');
-    }
-  });
-  
-  markStepComplete(1);
-  markStepComplete(2);
-  
-  showToast(`✓ Template loaded: ${template.title}`, 'success');
-  
-  // Scroll to generate button
-  setTimeout(() => {
-    document.getElementById('generate-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300);
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-//  UI INTERACTIONS
-// ══════════════════════════════════════════════════════════════════════════════
-function updateCharCounter(textarea) {
-  const count = textarea.value.length;
-  document.getElementById('input-counter').textContent = `${count} character${count === 1 ? '' : 's'}`;
-}
-
-function togglePlatform(card, platform) {
-  card.classList.toggle('active');
-  
-  const index = selectedPlatforms.indexOf(platform);
-  if (index > -1) {
-    selectedPlatforms.splice(index, 1);
-  } else {
-    selectedPlatforms.push(platform);
-  }
-  
-  if (selectedPlatforms.length > 0) {
-    markStepComplete(2);
-  }
-}
-
-function selectOption(chip, type, value) {
-  // Remove active from siblings
-  chip.parentElement.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active');
-  
-  if (type === 'tone') selectedTone = value;
-  if (type === 'hashtags') selectedHashtags = value;
-}
-
-function markStepComplete(stepNum) {
-  const step = document.getElementById(`step-${stepNum}`);
-  step.classList.add('completed');
-  
-  // Activate next step
-  const nextStep = document.getElementById(`step-${stepNum + 1}`);
-  if (nextStep) {
-    nextStep.classList.add('active');
-  }
-  
-  // Activate next section
-  const nextSection = document.getElementById(`section-${stepNum + 1}`);
-  if (nextSection) {
-    nextSection.classList.add('active');
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-//  GENERATE POSTS
-// ══════════════════════════════════════════════════════════════════════════════
-async function generatePosts() {
-  const content = document.getElementById('content-input').value.trim();
-  
-  // Validation with helpful messages
-  if (!content) {
-    showToast('⚠️ Tell me what to post about first! Use a template or write your own idea.', 'error');
-    document.getElementById('content-input').focus();
-    return;
-  }
-  
-  if (selectedPlatforms.length === 0) {
-    showToast('⚠️ Pick at least one platform (Facebook, Instagram, etc.)', 'error');
-    document.querySelector('.platform-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-  
-  // Check for API key
-  const apiKey = localStorage.getItem('anthropic_api_key');
-  if (!apiKey || !apiKey.startsWith('sk-ant-')) {
-    showToast('⚠️ Need to add your API key first. Check the setup instructions below.', 'error');
-    showApiKeySetup();
-    return;
-  }
-  
-  // UI: Loading state
-  const btn = document.getElementById('generate-btn');
-  btn.disabled = true;
-  document.getElementById('spinner').style.display = 'block';
-  document.getElementById('btn-icon').style.display = 'none';
-  document.getElementById('btn-text').textContent = 'CREATING YOUR POSTS...';
-  
-  // Build prompt
-  const platformList = selectedPlatforms.map(p => {
-    const config = PLATFORMS[p];
-    return `**${config.name}** (${config.maxChars} char max): ${config.style}`;
-  }).join('\n');
-  
-  const toneMap = {
-    motivational: 'Inspiring, energetic, and uplifting. Rally people to take action.',
-    casual: 'Friendly, approachable, and conversational. Like talking to a friend.',
-    professional: 'Polished, credible, and mission-focused. Suitable for partners and donors.',
-    direct: 'Bold, straightforward, and no-nonsense. Challenge people to step up.'
-  };
-  
-  const hashtagMap = {
-    yes: 'Include 5-8 relevant hashtags',
-    minimal: 'Include only 3-5 highly targeted hashtags',
-    no: 'No hashtags'
-  };
-  
-  const prompt = `You are writing social media posts for I Am Redemption (IAR).
-
-ABOUT IAR:
-${IAR_CONTEXT}
-
-INSTRUCTIONS:
-Create ${selectedPlatforms.length} social media post${selectedPlatforms.length > 1 ? 's' : ''} about this topic:
-
-"${content}"
-
-TONE: ${toneMap[selectedTone]}
-HASHTAGS: ${hashtagMap[selectedHashtags]}
-
-PLATFORMS TO WRITE FOR:
-${platformList}
-
-Return ONLY a JSON object with platform names as keys and post text as values. No markdown formatting, no extra explanation.
-
-Example format:
-{
-  "facebook": "post text here",
-  "instagram": "post text here"
-}`;
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'API request failed');
-    }
-    
-    const data = await response.json();
-    const text = data.content?.[0]?.text || '';
-    
-    // Parse JSON
-    let posts = {};
-    try {
-      const clean = text.replace(/```json|```/g, '').trim();
-      posts = JSON.parse(clean);
-    } catch(e) {
-      const match = text.match(/\{[\s\S]*\}/);
-      if (match) {
-        posts = JSON.parse(match[0]);
-      } else {
-        throw new Error('Could not parse AI response');
-      }
-    }
-    
-    generatedPosts = posts;
-    renderPosts(posts);
-    markStepComplete(3);
-    
-    showToast(`🎉 ${Object.keys(posts).length} post${Object.keys(posts).length > 1 ? 's' : ''} created! Edit them below.`, 'success');
-    
-  } catch(err) {
-    console.error('Generation error:', err);
-    showToast(`❌ ${err.message || 'Failed to generate posts'}`, 'error');
-  } finally {
-    btn.disabled = false;
-    document.getElementById('spinner').style.display = 'none';
-    document.getElementById('btn-icon').style.display = 'inline';
-    document.getElementById('btn-text').textContent = 'GENERATE POSTS WITH AI';
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-//  RENDER POSTS
-// ══════════════════════════════════════════════════════════════════════════════
-function renderPosts(posts) {
-  const container = document.getElementById('results-body');
-  container.innerHTML = '';
-  
-  document.getElementById('results-count').textContent = `${Object.keys(posts).length} post${Object.keys(posts).length > 1 ? 's' : ''} ready to use`;
-  
-  Object.entries(posts).forEach(([platform, text]) => {
-    const config = PLATFORMS[platform];
-    const charCount = text.length;
-    const charStatus = charCount > config.maxChars ? 'over' : charCount > config.maxChars * 0.9 ? 'warn' : 'ok';
-    
-    const card = document.createElement('div');
-    card.className = 'post-card';
-    card.innerHTML = `
-      <div class="post-header">
-        <div class="post-platform">
-          <span class="post-platform-icon">${config.icon}</span>
-          <span class="post-platform-name">${config.name}</span>
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label>Date Range</label>
+                <select>
+                    <option>Last 7 days</option>
+                    <option>Last 30 days</option>
+                    <option>Last 90 days</option>
+                    <option>All time</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Platform</label>
+                <select>
+                    <option>All Platforms</option>
+                    <option>Facebook</option>
+                    <option>Instagram</option>
+                    <option>Twitter/X</option>
+                    <option>LinkedIn</option>
+                    <option>YouTube</option>
+                    <option>TikTok</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select>
+                    <option>Newest First</option>
+                    <option>Oldest First</option>
+                    <option>Most Engagement</option>
+                    <option>Least Engagement</option>
+                </select>
+            </div>
         </div>
-        <div class="post-char-count ${charStatus}">${charCount} / ${config.maxChars}</div>
-      </div>
-      <div class="post-body">
-        <textarea class="post-text" oninput="updatePostCharCount(this, '${platform}')">${text}</textarea>
-      </div>
-      <div class="post-footer">
-        <button class="post-btn" onclick="copyPost('${platform}')">📋 Copy</button>
-        <button class="post-btn primary" onclick="downloadPost('${platform}')">💾 Download</button>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-  
-  // Scroll to results
-  setTimeout(() => {
-    document.querySelector('.results-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 300);
-}
 
-function updatePostCharCount(textarea, platform) {
-  const config = PLATFORMS[platform];
-  const charCount = textarea.value.length;
-  const charStatus = charCount > config.maxChars ? 'over' : charCount > config.maxChars * 0.9 ? 'warn' : 'ok';
-  
-  const counter = textarea.closest('.post-card').querySelector('.post-char-count');
-  counter.textContent = `${charCount} / ${config.maxChars}`;
-  counter.className = `post-char-count ${charStatus}`;
-  
-  generatedPosts[platform] = textarea.value;
-}
+        <div class="posts-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Platform</th>
+                        <th>Preview</th>
+                        <th>Status</th>
+                        <th>Likes</th>
+                        <th>Comments</th>
+                        <th>Shares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>May 6, 2026</td>
+                        <td><span class="platform-badge">Facebook</span></td>
+                        <td class="post-preview">Monday Motivation: Every journey begins with a single step. Today is your day to start...</td>
+                        <td><span class="status-badge status-success">✓ Posted</span></td>
+                        <td>142</td>
+                        <td>23</td>
+                        <td>18</td>
+                    </tr>
+                    <tr>
+                        <td>May 5, 2026</td>
+                        <td><span class="platform-badge">Instagram</span></td>
+                        <td class="post-preview">Join us this Sunday for our community run! 7am at Memorial Park. All fitness levels welcome...</td>
+                        <td><span class="status-badge status-success">✓ Posted</span></td>
+                        <td>98</td>
+                        <td>15</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>May 10, 2026</td>
+                        <td><span class="platform-badge">Twitter/X</span></td>
+                        <td class="post-preview">New podcast episode dropping tomorrow! Featuring amazing guest speaker...</td>
+                        <td><span class="status-badge status-pending">⏳ Scheduled</span></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>May 3, 2026</td>
+                        <td><span class="platform-badge">LinkedIn</span></td>
+                        <td class="post-preview">Proud to announce our partnership with local organizations to expand our reach...</td>
+                        <td><span class="status-badge status-success">✓ Posted</span></td>
+                        <td>67</td>
+                        <td>8</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>May 2, 2026</td>
+                        <td><span class="platform-badge">YouTube</span></td>
+                        <td class="post-preview">Community highlight video featuring member success stories and journey...</td>
+                        <td><span class="status-badge status-success">✓ Posted</span></td>
+                        <td>234</td>
+                        <td>45</td>
+                        <td>89</td>
+                    </tr>
+                    <tr>
+                        <td>May 1, 2026</td>
+                        <td><span class="platform-badge">TikTok</span></td>
+                        <td class="post-preview">Quick motivation tip for your Monday morning routine #IAmRedemption...</td>
+                        <td><span class="status-badge status-success">✓ Posted</span></td>
+                        <td>412</td>
+                        <td>67</td>
+                        <td>123</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-// ══════════════════════════════════════════════════════════════════════════════
-//  ACTIONS
-// ══════════════════════════════════════════════════════════════════════════════
-function copyPost(platform) {
-  const text = generatedPosts[platform];
-  navigator.clipboard.writeText(text).then(() => {
-    showToast(`✓ ${PLATFORMS[platform].name} post copied!`, 'success');
-  });
-}
+    <!-- STATISTICS TAB -->
+    <div class="tab-content" id="statistics-tab">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Followers</div>
+                <div class="stat-value">12,458</div>
+                <div class="stat-trend">↑ 8% this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Reach This Week</div>
+                <div class="stat-value">45.2K</div>
+                <div class="stat-trend">↑ 12% from last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Best Posting Time</div>
+                <div class="stat-value">6 PM</div>
+                <div class="stat-trend">Mon-Wed perform best</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Response Rate</div>
+                <div class="stat-value">94%</div>
+                <div class="stat-trend">↑ 3% improvement</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg. Engagement</div>
+                <div class="stat-value">8.4%</div>
+                <div class="stat-trend">Above industry avg (5.2%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Viral Posts</div>
+                <div class="stat-value">3</div>
+                <div class="stat-trend">1K+ engagements each</div>
+            </div>
+        </div>
 
-function downloadPost(platform) {
-  const text = generatedPosts[platform];
-  const blob = new Blob([text], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `IAR_${platform}_post.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast(`✓ ${PLATFORMS[platform].name} post downloaded!`, 'success');
-}
+        <!-- Best Times to Post -->
+        <div class="calendar-container" style="margin-bottom: 1.5rem;">
+            <h2 style="color: var(--iar-gold); font-family: Georgia, serif; margin-bottom: 1.25rem; font-size: 1.6rem; text-shadow: 0 0 25px rgba(253, 191, 18, 0.6);">Best Times to Post</h2>
+            <div class="posts-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day of Week</th>
+                            <th>Best Time</th>
+                            <th>Avg. Engagement</th>
+                            <th>Reach</th>
+                            <th>Recommendation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Monday</strong></td>
+                            <td>6:00 PM - 8:00 PM</td>
+                            <td>9.2%</td>
+                            <td>2,340</td>
+                            <td><span class="status-badge status-success">Excellent</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tuesday</strong></td>
+                            <td>12:00 PM - 2:00 PM</td>
+                            <td>7.8%</td>
+                            <td>1,890</td>
+                            <td><span class="status-badge status-success">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wednesday</strong></td>
+                            <td>6:00 PM - 8:00 PM</td>
+                            <td>8.9%</td>
+                            <td>2,120</td>
+                            <td><span class="status-badge status-success">Excellent</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Thursday</strong></td>
+                            <td>7:00 PM - 9:00 PM</td>
+                            <td>8.1%</td>
+                            <td>1,950</td>
+                            <td><span class="status-badge status-success">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Friday</strong></td>
+                            <td>5:00 PM - 7:00 PM</td>
+                            <td>6.4%</td>
+                            <td>1,560</td>
+                            <td><span class="status-badge status-pending">Fair</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Saturday</strong></td>
+                            <td>10:00 AM - 12:00 PM</td>
+                            <td>7.2%</td>
+                            <td>1,780</td>
+                            <td><span class="status-badge status-success">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sunday</strong></td>
+                            <td>7:00 PM - 9:00 PM</td>
+                            <td>8.6%</td>
+                            <td>2,050</td>
+                            <td><span class="status-badge status-success">Excellent</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-// ══════════════════════════════════════════════════════════════════════════════
-//  TOAST NOTIFICATIONS
-// ══════════════════════════════════════════════════════════════════════════════
-function showToast(message, type = '') {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.className = type;
-  toast.classList.add('show');
-  
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 4000);
-}
+        <!-- Hashtag Performance -->
+        <div class="calendar-container" style="margin-bottom: 1.5rem;">
+            <h2 style="color: var(--iar-gold); font-family: Georgia, serif; margin-bottom: 1.25rem; font-size: 1.6rem; text-shadow: 0 0 25px rgba(253, 191, 18, 0.6);">Top Performing Hashtags</h2>
+            <div class="posts-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hashtag</th>
+                            <th>Times Used</th>
+                            <th>Avg. Reach</th>
+                            <th>Avg. Engagement</th>
+                            <th>Best Platform</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>#IAmRedemption</strong></td>
+                            <td>24</td>
+                            <td>2,450</td>
+                            <td>12.3%</td>
+                            <td>Instagram</td>
+                        </tr>
+                        <tr>
+                            <td><strong>#Recovery</strong></td>
+                            <td>18</td>
+                            <td>1,980</td>
+                            <td>9.8%</td>
+                            <td>Facebook</td>
+                        </tr>
+                        <tr>
+                            <td><strong>#SecondChances</strong></td>
+                            <td>15</td>
+                            <td>1,670</td>
+                            <td>8.9%</td>
+                            <td>Twitter/X</td>
+                        </tr>
+                        <tr>
+                            <td><strong>#CommunitySupport</strong></td>
+                            <td>12</td>
+                            <td>1,540</td>
+                            <td>8.2%</td>
+                            <td>LinkedIn</td>
+                        </tr>
+                        <tr>
+                            <td><strong>#Inspiration</strong></td>
+                            <td>20</td>
+                            <td>2,120</td>
+                            <td>10.5%</td>
+                            <td>Instagram</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-// ══════════════════════════════════════════════════════════════════════════════
-//  API KEY SETUP
-// ══════════════════════════════════════════════════════════════════════════════
-function showApiKeySetup() {
-  const key = prompt(`To use this tool, you need an Anthropic API key.
+        <!-- Audience Demographics -->
+        <div class="calendar-container" style="margin-bottom: 1.5rem;">
+            <h2 style="color: var(--iar-gold); font-family: Georgia, serif; margin-bottom: 1.25rem; font-size: 1.6rem; text-shadow: 0 0 25px rgba(253, 191, 18, 0.6);">Audience Insights</h2>
+            <div class="stats-grid" style="margin-bottom: 0;">
+                <div class="stat-card">
+                    <div class="stat-label">Age Range (Most Active)</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">25-44</div>
+                    <div class="stat-trend">67% of total audience</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Top Location</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">Texas</div>
+                    <div class="stat-trend">28% • Then CA (18%), FL (12%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Gender Split</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">58/42</div>
+                    <div class="stat-trend">Male / Female</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Peak Activity</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">Evening</div>
+                    <div class="stat-trend">6-9 PM weekdays</div>
+                </div>
+            </div>
+        </div>
 
-1. Go to: console.anthropic.com
-2. Sign up (it's free to start)
-3. Go to Settings → API Keys
-4. Create a new key
-5. Paste it here:
+        <div class="calendar-container" style="margin-bottom: 1.5rem;">
+            <h2 style="color: var(--iar-gold); font-family: Georgia, serif; margin-bottom: 1.25rem; font-size: 1.6rem; text-shadow: 0 0 25px rgba(253, 191, 18, 0.6);">Platform Performance</h2>
+            <div class="stats-grid" style="margin-bottom: 0;">
+                <div class="stat-card">
+                    <div class="stat-label">📘 Facebook</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">4,523</div>
+                    <div class="stat-trend">followers • 1,247 engagements/mo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">📷 Instagram</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">3,891</div>
+                    <div class="stat-trend">followers • 982 engagements/mo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">🐦 Twitter/X</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">1,567</div>
+                    <div class="stat-trend">followers • 423 engagements/mo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">💼 LinkedIn</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">892</div>
+                    <div class="stat-trend">connections • 234 engagements/mo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">📺 YouTube</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">1,245</div>
+                    <div class="stat-trend">subscribers • 5.2K views/mo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">🎵 TikTok</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">340</div>
+                    <div class="stat-trend">followers • 12.4K views/mo</div>
+                </div>
+            </div>
+        </div>
 
-Your key (starts with sk-ant-):`);
-  
-  if (key && key.startsWith('sk-ant-')) {
-    localStorage.setItem('anthropic_api_key', key);
-    showToast('✓ API key saved! You can now generate posts.', 'success');
-  } else if (key) {
-    showToast('❌ That doesn\'t look like a valid key. It should start with sk-ant-', 'error');
-  }
-}
+        <div class="calendar-container" style="margin-bottom: 1.5rem;">
+            <h2 style="color: var(--iar-gold); font-family: Georgia, serif; margin-bottom: 1.25rem; font-size: 1.6rem; text-shadow: 0 0 25px rgba(253, 191, 18, 0.6);">Content Performance by Template</h2>
+            <div class="posts-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Template Type</th>
+                            <th>Posts This Month</th>
+                            <th>Avg. Likes</th>
+                            <th>Avg. Comments</th>
+                            <th>Avg. Shares</th>
+                            <th>Engagement Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>💪 Monday Motivation</strong></td>
+                            <td>8</td>
+                            <td>156</td>
+                            <td>28</td>
+                            <td>34</td>
+                            <td><span class="status-badge status-success">9.2%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>📅 Event Announcement</strong></td>
+                            <td>5</td>
+                            <td>134</td>
+                            <td>42</td>
+                            <td>67</td>
+                            <td><span class="status-badge status-success">11.4%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>⭐ Community Spotlight</strong></td>
+                            <td>4</td>
+                            <td>198</td>
+                            <td>56</td>
+                            <td>89</td>
+                            <td><span class="status-badge status-success">14.8%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>🎙️ Podcast Episode</strong></td>
+                            <td>3</td>
+                            <td>87</td>
+                            <td>19</td>
+                            <td>23</td>
+                            <td><span class="status-badge status-pending">6.1%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>📢 General Update</strong></td>
+                            <td>2</td>
+                            <td>76</td>
+                            <td>12</td>
+                            <td>8</td>
+                            <td><span class="status-badge status-pending">5.3%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>🎯 Call to Action</strong></td>
+                            <td>2</td>
+                            <td>112</td>
+                            <td>34</td>
+                            <td>45</td>
+                            <td><span class="status-badge status-success">8.9%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-// Check for API key on load
-window.addEventListener('load', () => {
-  const apiKey = localStorage.getItem('anthropic_api_key');
-  if (!apiKey) {
-    setTimeout(() => {
-      if (confirm('Welcome! To use the AI post generator, you need an Anthropic API key (free to start). Want to set it up now?')) {
-        showApiKeySetup();
-      }
-    }, 2000);
-  }
-});
-</script>
+        <!-- Post Frequency Analysis -->
+        <div class="calendar-container" style="margin-bottom: 1.5rem;">
+            <h2 style="color: var(--iar-gold); font-family: Georgia, serif; margin-bottom: 1.25rem; font-size: 1.6rem; text-shadow: 0 0 25px rgba(253, 191, 18, 0.6);">Posting Frequency Analysis</h2>
+            <div class="posts-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Posts Published</th>
+                            <th>Total Reach</th>
+                            <th>Total Engagement</th>
+                            <th>Avg. per Post</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Week 1 (May 1-7)</strong></td>
+                            <td>6</td>
+                            <td>12,340</td>
+                            <td>1,089</td>
+                            <td>8.8%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Week 2 (May 8-14)</strong></td>
+                            <td>7</td>
+                            <td>14,560</td>
+                            <td>1,245</td>
+                            <td>8.5%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Week 3 (May 15-21)</strong></td>
+                            <td>5</td>
+                            <td>10,890</td>
+                            <td>920</td>
+                            <td>8.4%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Week 4 (May 22-28)</strong></td>
+                            <td>6</td>
+                            <td>13,120</td>
+                            <td>1,134</td>
+                            <td>8.6%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
+        <div class="calendar-container">
+            <h2 style="color: var(--iar-gold); font-family: Georgia, serif; margin-bottom: 1.25rem; font-size: 1.6rem; text-shadow: 0 0 25px rgba(253, 191, 18, 0.6);">Growth Metrics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">New Followers (30 days)</div>
+                    <div class="stat-value">+847</div>
+                    <div class="stat-trend">↑ 7.3% growth rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Posts Published</div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-trend">Target: 20-25/month ✓</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Post Reach</div>
+                    <div class="stat-value">1,892</div>
+                    <div class="stat-trend">↑ 18% from last month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Community Engagement</div>
+                    <div class="stat-value">Strong</div>
+                    <div class="stat-trend">Top 15% in category</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Reply Rate</div>
+                    <div class="stat-value">94%</div>
+                    <div class="stat-trend">Within 2 hours avg</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Sentiment Score</div>
+                    <div class="stat-value">92%</div>
+                    <div class="stat-trend">Positive comments</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-content" id="settings-tab">
+        <div class="settings-container">
+            <div class="settings-section">
+                <h3>Platform Connections</h3>
+                
+                <div class="form-group">
+                    <label>Facebook</label>
+                    <div class="connection-status">
+                        <div class="status-indicator disconnected"></div>
+                        <span>Not Connected</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Connect Facebook</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Instagram</label>
+                    <div class="connection-status">
+                        <div class="status-indicator disconnected"></div>
+                        <span>Not Connected</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Connect Instagram</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Twitter/X</label>
+                    <div class="connection-status">
+                        <div class="status-indicator disconnected"></div>
+                        <span>Not Connected</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Connect Twitter</button>
+                </div>
+
+                <div class="form-group">
+                    <label>LinkedIn</label>
+                    <div class="connection-status">
+                        <div class="status-indicator disconnected"></div>
+                        <span>Not Connected</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Connect LinkedIn</button>
+                </div>
+
+                <div class="form-group">
+                    <label>YouTube</label>
+                    <div class="connection-status">
+                        <div class="status-indicator disconnected"></div>
+                        <span>Not Connected</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Connect YouTube</button>
+                </div>
+
+                <div class="form-group">
+                    <label>TikTok</label>
+                    <div class="connection-status">
+                        <div class="status-indicator disconnected"></div>
+                        <span>Not Connected</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Connect TikTok</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>AI Configuration</h3>
+                
+                <div class="form-group">
+                    <label>Anthropic API Key</label>
+                    <input type="password" placeholder="sk-ant-..." id="api-key">
+                    <div class="help-text">Your API key is stored securely in your browser and never sent to our servers</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Organization Name</label>
+                    <input type="text" value="I Am Redemption" id="org-name">
+                    <div class="help-text">Used in AI-generated posts to maintain brand consistency</div>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POST SCHEDULING MODAL -->
+    <div class="modal" id="post-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Schedule Post</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1: Select Platforms -->
+                <div class="modal-section" id="step-platforms">
+                    <h4>Which platforms do you want to post on?</h4>
+                    <div class="platform-grid">
+                        <div class="platform-option" onclick="togglePlatform('facebook')">
+                            <div class="platform-checkbox"></div>
+                            <div class="platform-icon">📘</div>
+                            <div class="platform-name">Facebook</div>
+                        </div>
+                        <div class="platform-option" onclick="togglePlatform('instagram')">
+                            <div class="platform-checkbox"></div>
+                            <div class="platform-icon">📷</div>
+                            <div class="platform-name">Instagram</div>
+                        </div>
+                        <div class="platform-option" onclick="togglePlatform('twitter')">
+                            <div class="platform-checkbox"></div>
+                            <div class="platform-icon">🐦</div>
+                            <div class="platform-name">Twitter/X</div>
+                        </div>
+                        <div class="platform-option" onclick="togglePlatform('linkedin')">
+                            <div class="platform-checkbox"></div>
+                            <div class="platform-icon">💼</div>
+                            <div class="platform-name">LinkedIn</div>
+                        </div>
+                        <div class="platform-option" onclick="togglePlatform('youtube')">
+                            <div class="platform-checkbox"></div>
+                            <div class="platform-icon">📺</div>
+                            <div class="platform-name">YouTube</div>
+                        </div>
+                        <div class="platform-option" onclick="togglePlatform('tiktok')">
+                            <div class="platform-checkbox"></div>
+                            <div class="platform-icon">🎵</div>
+                            <div class="platform-name">TikTok</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: Tone Selection -->
+                <div class="modal-section" id="step-tone">
+                    <h4>What tone should this post have?</h4>
+                    <div class="tone-selector-modal">
+                        <select id="brand-tone-select" class="tone-dropdown">
+                            <option value="inspiring">Inspiring & Hopeful</option>
+                            <option value="authentic">Authentic & Real</option>
+                            <option value="motivational">Motivational & Energetic</option>
+                            <option value="compassionate">Compassionate & Supportive</option>
+                            <option value="empowering">Empowering & Strong</option>
+                            <option value="community">Community-Focused</option>
+                            <option value="professional">Professional & Informative</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 2: Recurrence -->
+                <div class="modal-section" id="step-recurrence">
+                    <h4>How often should this post?</h4>
+                    <div class="recurrence-options">
+                        <div class="recurrence-option selected" onclick="selectRecurrence('once')">
+                            <div class="radio-button"></div>
+                            <div>Post once on this day</div>
+                        </div>
+                        <div class="recurrence-option" onclick="selectRecurrence('weekly')">
+                            <div class="radio-button"></div>
+                            <div>Post every week on <span id="weekday-name">Monday</span></div>
+                        </div>
+                        <div class="recurrence-option" onclick="selectRecurrence('monthly')">
+                            <div class="radio-button"></div>
+                            <div>Post every month on the <span id="day-number">15th</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Template Selection -->
+                <div class="modal-section" id="step-template">
+                    <h4>Pick a post template</h4>
+                    <div class="template-grid">
+                        <div class="template-card" onclick="selectTemplate('motivation')">
+                            <div class="template-icon">💪</div>
+                            <div class="template-name">Monday Motivation</div>
+                            <div class="template-description">Inspiring message to start the week</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('event')">
+                            <div class="template-icon">📅</div>
+                            <div class="template-name">Event Announcement</div>
+                            <div class="template-description">Promote upcoming activities</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('spotlight')">
+                            <div class="template-icon">⭐</div>
+                            <div class="template-name">Community Spotlight</div>
+                            <div class="template-description">Feature member stories</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('podcast')">
+                            <div class="template-icon">🎙️</div>
+                            <div class="template-name">Podcast Episode</div>
+                            <div class="template-description">Share latest episode</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('update')">
+                            <div class="template-icon">📢</div>
+                            <div class="template-name">General Update</div>
+                            <div class="template-description">Share news and updates</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('cta')">
+                            <div class="template-icon">🎯</div>
+                            <div class="template-name">Call to Action</div>
+                            <div class="template-description">Encourage engagement</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: AI Preview -->
+                <div class="modal-section" id="step-preview" style="display: none;">
+                    <h4>Post Preview</h4>
+                    <div class="preview-box" id="post-preview">Click "Generate Post" to create content using AI</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-primary" id="generate-btn" onclick="generatePost()" style="display: none;">Generate Post</button>
+                    <button class="btn btn-primary" id="schedule-btn" onclick="schedulePost()" style="display: none;">Schedule This</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            currentMonth: new Date(2026, 4, 1), // May 2026
+            selectedDate: null,
+            selectedPlatforms: new Set(),
+            selectedRecurrence: 'once',
+            selectedTemplate: null,
+            generatedPost: null,
+            scheduledPosts: {},
+            recurringPosts: []
+        };
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        // Calendar functions
+        function renderCalendar() {
+            const year = state.currentMonth.getFullYear();
+            const month = state.currentMonth.getMonth();
+            
+            // Update header
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('current-month').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+            
+            const container = document.getElementById('calendar-days');
+            container.innerHTML = '';
+            
+            // Previous month days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const day = daysInPrevMonth - i;
+                const dayEl = createDayElement(day, true);
+                container.appendChild(dayEl);
+            }
+            
+            // Current month days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isToday = date.toDateString() === today.toDateString();
+                const dayEl = createDayElement(day, false, isToday, date);
+                container.appendChild(dayEl);
+            }
+            
+            // Next month days
+            const remainingDays = 42 - (firstDay + daysInMonth);
+            for (let day = 1; day <= remainingDays; day++) {
+                const dayEl = createDayElement(day, true);
+                container.appendChild(dayEl);
+            }
+        }
+
+        function createDayElement(day, otherMonth, isToday = false, date = null) {
+            const dayEl = document.createElement('div');
+            dayEl.className = 'calendar-day';
+            if (otherMonth) dayEl.classList.add('other-month');
+            if (isToday) dayEl.classList.add('today');
+            
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = day;
+            dayEl.appendChild(dayNumber);
+            
+            const dayPosts = document.createElement('div');
+            dayPosts.className = 'day-posts';
+            
+            if (date && !otherMonth) {
+                // Check for scheduled posts
+                const dateKey = date.toISOString().split('T')[0];
+                const posts = state.scheduledPosts[dateKey] || [];
+                
+                // Add dots for scheduled posts
+                posts.forEach(post => {
+                    const dot = document.createElement('div');
+                    dot.className = 'post-dot';
+                    if (post.recurring) dot.classList.add('recurring');
+                    dayPosts.appendChild(dot);
+                });
+                
+                // Check for recurring posts
+                state.recurringPosts.forEach(recurring => {
+                    if (recurring.type === 'weekly' && date.getDay() === recurring.dayOfWeek) {
+                        const dot = document.createElement('div');
+                        dot.className = 'post-dot recurring';
+                        dayPosts.appendChild(dot);
+                    } else if (recurring.type === 'monthly' && date.getDate() === recurring.dayOfMonth) {
+                        const dot = document.createElement('div');
+                        dot.className = 'post-dot recurring';
+                        dayPosts.appendChild(dot);
+                    }
+                });
+                
+                dayEl.onclick = () => openModal(date);
+            }
+            
+            dayEl.appendChild(dayPosts);
+            return dayEl;
+        }
+
+        function changeMonth(delta) {
+            state.currentMonth = new Date(
+                state.currentMonth.getFullYear(),
+                state.currentMonth.getMonth() + delta,
+                1
+            );
+            renderCalendar();
+        }
+
+        // Modal functions
+        function openModal(date) {
+            state.selectedDate = date;
+            state.selectedPlatforms.clear();
+            state.selectedRecurrence = 'once';
+            state.selectedTemplate = null;
+            state.generatedPost = null;
+            
+            const modalTitle = `What do you want to post on ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}?`;
+            document.getElementById('modal-title').textContent = modalTitle;
+            
+            // Update weekday and day number
+            const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('weekday-name').textContent = weekdays[date.getDay()];
+            document.getElementById('day-number').textContent = date.getDate() + (date.getDate() === 1 || date.getDate() === 21 || date.getDate() === 31 ? 'st' : 
+                                                                                 date.getDate() === 2 || date.getDate() === 22 ? 'nd' :
+                                                                                 date.getDate() === 3 || date.getDate() === 23 ? 'rd' : 'th');
+            
+            // Reset selections
+            document.querySelectorAll('.platform-option').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.recurrence-option').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.recurrence-option')[0].classList.add('selected');
+            document.querySelectorAll('.template-card').forEach(el => el.classList.remove('selected'));
+            
+            // Reset buttons
+            document.getElementById('step-preview').style.display = 'none';
+            document.getElementById('generate-btn').style.display = 'none';
+            document.getElementById('schedule-btn').style.display = 'none';
+            
+            document.getElementById('post-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('post-modal').classList.remove('active');
+        }
+
+        function togglePlatform(platform) {
+            const option = event.currentTarget;
+            option.classList.toggle('selected');
+            
+            if (state.selectedPlatforms.has(platform)) {
+                state.selectedPlatforms.delete(platform);
+            } else {
+                state.selectedPlatforms.add(platform);
+            }
+        }
+
+        function selectRecurrence(type) {
+            state.selectedRecurrence = type;
+            document.querySelectorAll('.recurrence-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+        }
+
+        function selectTemplate(template) {
+            state.selectedTemplate = template;
+            document.querySelectorAll('.template-card').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            // Show preview section and generate button
+            document.getElementById('step-preview').style.display = 'block';
+            document.getElementById('generate-btn').style.display = 'inline-block';
+        }
+
+        async function generatePost() {
+            if (!state.selectedTemplate || state.selectedPlatforms.size === 0) {
+                alert('Please select platforms and a template first!');
+                return;
+            }
+
+            const apiKey = localStorage.getItem('anthropic_api_key');
+            if (!apiKey) {
+                alert('Please add your Anthropic API key in Settings first!');
+                switchTab('settings');
+                closeModal();
+                return;
+            }
+
+            const previewBox = document.getElementById('post-preview');
+            previewBox.innerHTML = '<div class="spinner"></div>';
+            previewBox.classList.add('generating');
+
+            // Template prompts
+            const templatePrompts = {
+                motivation: "Write an inspiring Monday motivation post for I Am Redemption, focusing on recovery, second chances, and community support. Keep it authentic and hopeful. 2-3 sentences.",
+                event: "Write an engaging event announcement for I Am Redemption's upcoming community run. Include time, place, and welcoming message for all fitness levels. 2-3 sentences.",
+                spotlight: "Write a community spotlight post celebrating a member's journey with I Am Redemption. Focus on transformation, hope, and community impact. 2-3 sentences.",
+                podcast: "Write an announcement for the latest In A Minute podcast episode. Create excitement about the guest and topic. 2-3 sentences.",
+                update: "Write a general update post for I Am Redemption about recent activities and impact in the community. Keep it positive and engaging. 2-3 sentences.",
+                cta: "Write a call-to-action post encouraging people to join I Am Redemption's mission, volunteer, or attend an event. Make it compelling and actionable. 2-3 sentences."
+            };
+
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 300,
+                        messages: [{
+                            role: 'user',
+                            content: templatePrompts[state.selectedTemplate]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.content && data.content[0] && data.content[0].text) {
+                    state.generatedPost = data.content[0].text;
+                    previewBox.textContent = state.generatedPost;
+                    previewBox.classList.remove('generating');
+                    
+                    // Show schedule button
+                    document.getElementById('generate-btn').style.display = 'none';
+                    document.getElementById('schedule-btn').style.display = 'inline-block';
+                } else {
+                    throw new Error('Invalid response from API');
+                }
+            } catch (error) {
+                console.error('Error generating post:', error);
+                previewBox.textContent = 'Error generating post. Please check your API key and try again.';
+                previewBox.classList.remove('generating');
+            }
+        }
+
+        function schedulePost() {
+            if (!state.generatedPost) {
+                alert('Please generate a post first!');
+                return;
+            }
+
+            const dateKey = state.selectedDate.toISOString().split('T')[0];
+            
+            // Initialize array if it doesn't exist
+            if (!state.scheduledPosts[dateKey]) {
+                state.scheduledPosts[dateKey] = [];
+            }
+
+            // Add the post
+            const post = {
+                date: state.selectedDate,
+                platforms: Array.from(state.selectedPlatforms),
+                template: state.selectedTemplate,
+                content: state.generatedPost,
+                recurring: state.selectedRecurrence !== 'once'
+            };
+
+            state.scheduledPosts[dateKey].push(post);
+
+            // Handle recurring posts
+            if (state.selectedRecurrence === 'weekly') {
+                state.recurringPosts.push({
+                    type: 'weekly',
+                    dayOfWeek: state.selectedDate.getDay(),
+                    template: state.selectedTemplate,
+                    platforms: Array.from(state.selectedPlatforms)
+                });
+            } else if (state.selectedRecurrence === 'monthly') {
+                state.recurringPosts.push({
+                    type: 'monthly',
+                    dayOfMonth: state.selectedDate.getDate(),
+                    template: state.selectedTemplate,
+                    platforms: Array.from(state.selectedPlatforms)
+                });
+            }
+
+            // Save to localStorage
+            localStorage.setItem('scheduledPosts', JSON.stringify(state.scheduledPosts));
+            localStorage.setItem('recurringPosts', JSON.stringify(state.recurringPosts));
+
+            closeModal();
+            renderCalendar();
+            
+            // Show success message
+            alert('Post scheduled successfully!');
+        }
+
+        // Settings functions
+        function saveSettings() {
+            const apiKey = document.getElementById('api-key').value;
+            const orgName = document.getElementById('org-name').value;
+            
+            if (apiKey) {
+                localStorage.setItem('anthropic_api_key', apiKey);
+            }
+            if (orgName) {
+                localStorage.setItem('org_name', orgName);
+            }
+            
+            alert('Settings saved successfully!');
+        }
+
+        function saveApiKey() {
+            saveSettings();
+        }
+
+        function saveBrandSettings() {
+            saveSettings();
+        }
+
+        function getBrandTone() {
+            const toneSelect = document.getElementById('brand-tone-select');
+            return toneSelect ? toneSelect.value : 'inspiring';
+        }
+
+        // Initialize
+        function init() {
+            // Load saved data
+            const savedPosts = localStorage.getItem('scheduledPosts');
+            const savedRecurring = localStorage.getItem('recurringPosts');
+            
+            if (savedPosts) {
+                state.scheduledPosts = JSON.parse(savedPosts);
+            }
+            if (savedRecurring) {
+                state.recurringPosts = JSON.parse(savedRecurring);
+            }
+
+            // Load settings
+            const savedApiKey = localStorage.getItem('anthropic_api_key');
+            const savedOrgName = localStorage.getItem('org_name');
+
+            if (savedApiKey) {
+                document.getElementById('api-key').value = savedApiKey;
+            }
+            if (savedOrgName) {
+                document.getElementById('org-name').value = savedOrgName;
+            }
+
+            renderCalendar();
+        }
+
+        // Run on load
+        init();
+    </script>
 </body>
 </html>
